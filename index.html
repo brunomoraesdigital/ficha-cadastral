@@ -891,11 +891,17 @@
     }
 
     // Verifica se já está logado
+	/*
     (function verificarLogin() {
         if (sessionStorage.getItem('logado') === 'true') {
             document.getElementById('loginOverlay').style.display = 'none';
         }
     })();
+	*/
+	// Desativa a tela de login – sempre oculta o overlay
+	(function verificarLogin() {
+    	document.getElementById('loginOverlay').style.display = 'none';
+	})();
 
 
     function formatarData(data) {
@@ -1282,3 +1288,4 @@
 </body>
 
 </html>
+
