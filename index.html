@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro Funcional</title>
+    <style> 
+        /* ========== SEUS ESTILOS ORIGINAIS (NÃO ALTERADOS) ========== */
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        
+        body { 
+            margin: 0; 
+            display: flex; 
+            flex-wrap: wrap; 
+            height: 100vh; 
+            background: #0f172a; 
+            color: white; 
+            overflow: hidden; 
+        }
+
+        /* COLUNA DE ENTRADA */
+        .sidebar { 
+            width: 100%; 
+            max-width: 500px; 
+            background: #1e293b; 
+            padding: 20px; 
+            overflow-y: auto; 
+            border-right: 2px solid #334155; 
+            height: 100%; 
+        }
+        
+        .sidebar h2 { 
+            font-size: 14px; 
+            color: #38bdf8; 
+            margin-bottom: 15px; 
+            border-bottom: 1px solid #334155; 
+            padding-bottom: 5px; 
+        }
+        
+        .bloco { 
+            background: #111827; 
+            padding: 12px; 
+            border-radius: 6px; 
+            margin-bottom: 15px; 
+            border: 1px solid #334155; 
+        }
+        
+        .linha { 
+            display: flex; 
+            gap: 8px; 
+            margin-bottom: 8px; 
+        }
+        
+        .campo { 
+            display: flex; 
+            flex-direction: column; 
+            flex: 1; 
+        }
+        
+        .campo label { 
+            font-size: 9px; 
+            color: #94a3b8; 
+            font-weight: bold; 
+            margin-bottom: 3px; 
+            text-transform: uppercase; 
+        }
+        
+        input, select { 
+            padding: 8px; 
+            background: #1e293b; 
+            border: 1px solid #475569; 
+            color: white; 
+            border-radius: 4px; 
+            font-size: 12px; 
+            width: 100%; 
+            outline: none; 
+        }
+        
+        input:focus, select:focus { border-color: #38bdf8; }
+        input:disabled, select:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Checkbox personalizado simples */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 2px;
+        }
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+        .checkbox-group label {
+            font-size: 9px;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
+
+        /* ÁREA DA FICHA */
+        .preview { 
+            flex: 1; 
+            min-width: 400px; 
+            padding-bottom: 1px; 
+            padding-top: 20px;
+            background: #475569; 
+            overflow: auto; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+        
+        .btn-print { 
+            background: #10b981; 
+            color: white; 
+            border: none; 
+            padding: 10px 40px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            margin-bottom: 15px; 
+        }
+
+        .ficha { 
+            width: 210mm; 
+            background: white; 
+            padding: 10mm; 
+            color: black; 
+            flex-shrink: 0; 
+        }
+        
+        .header-ficha { 
+            border: 1px solid black; 
+            text-align: center; 
+            padding: 10px; 
+            background: #f1f5f9; 
+        }
+
+        /* FICHA EM FLEXBOX */
+        .ficha-grid {
+            border: 1px solid black;
+            border-top: none;
+        }
+
+        .linha-ficha {
+            display: flex;
+            border-bottom: 1px solid black;
+        }
+
+        .linha-ficha:last-child {
+            border-bottom: none;
+        }
+
+        .celula {
+            border-right: 1px solid black;
+            padding: 4px 6px;
+            min-height: 42px;
+            flex: 1;
+        }
+
+        .celula:last-child {
+            border-right: none;
+        }
+
+        .lbl { 
+            font-size: 7px; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            display: block; 
+            color: #444; 
+            margin-bottom: 2px; 
+        }
+        
+        .val { 
+            font-size: 10px; 
+            font-weight: normal; 
+            display: block; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            text-transform: uppercase; 
+        }
+        
+        /* Container para duas lotações */
+        .lotacao-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        
+        .lotacao-item {
+            font-size: 10px;
+            font-weight: normal;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+        }
+
+        /* Proporções */
+        .w-40 { flex: 4; }
+        .w-30 { flex: 3; }
+        .w-20 { flex: 2; }
+        .w-15 { flex: 1.5; }
+        .w-10 { flex: 1; }
+        .w-5 { flex: 0.5; }
+        .w-50 { flex: 5; }
+        .w-55 { flex: 5.5; }
+        .w-60 { flex: 6; }   /* para lotação expandida */
+        .w-80 { flex: 8; }   /* para lotação expandida ao máximo */
+        .w-100 { flex: 10; } /* usado para células que ocupam toda a linha */
+
+        /* Célula oculta */
+        .hidden-cell { display: none; }
+
+        /* --- RODAPÉ (status bar) – OCUPA TODA A LARGURA DA PREVIEW, FICA COLADO NA BASE --- */
+        .status-bar {
+            width: 100%;                    /* largura total da .preview */
+            margin-left: -20px;              /* compensa o padding da .preview */
+            margin-right: -20px;             /* compensa o padding da .preview */
+            box-sizing: border-box;          /* padding incluso na largura */
+            margin-top: auto;                 /* EMPURRA PARA O FUNDO DO CONTAINER FLEX */
+            background: #2d3e50;
+            color: #ecf0f1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 15px;
+            border-radius: 0;                /* sem bordas arredondadas, reto como na imagem */
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
+            flex-shrink: 0;
+        }
+        .clippy-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+			padding-left: 74px;
+			position: relative;
+        }
+        /* NOVO: botão para trocar frase do clippy */
+        .clippy-refresh {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            padding: 0;
+            line-height: 1;
+            color: inherit;
+        }
+        .clippy-refresh:hover {
+            transform: scale(1.2);
+        }
+        .clippy-img {
+			position: absolute;
+			bottom: 0px;
+			left: 0px;
+            width: 64px;
+            height: auto;
+            object-fit: contain;
+        }
+		#frase-clippy {
+			font-size: 12px;
+		}
+        .copyright {
+            display: flex;
+            gap: 20px;
+        }
+        .copyright a {
+            color: #b0d4ff;
+            text-decoration: none;
+            font-size: 12px;
+        }
+        .copyright a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- Responsividade do rodapé para telas pequenas --- */
+        @media (max-width: 600px) {
+            .status-bar {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                gap: 10px;
+                padding: 10px;
+            }
+            .clippy-area {
+                justify-content: center;
+                width: 100%;
+            }
+            .copyright {
+                justify-content: center;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            body { overflow-y: auto; }
+            .sidebar { max-width: 100%; height: auto; border-right: none; }
+            .ficha { transform: scale(0.8); transform-origin: top center; }
+        }
+
+        @media print {
+            .sidebar, .btn-print, .floating-btn, .floating-btn-info, .modal-overlay, .notification, .status-bar { display: none !important; }
+            body { background: white; }
+            .preview { background: white; }
+            .ficha { width: 100%; padding: 5mm; transform: none; }
+        }
+
+        /* Botões flutuantes */
+        .floating-btn {
+            position: fixed;
+            bottom: 130px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #b0e0b0; /* pastel */
+            border: 2px solid #2e7d32;
+            color: #1e3a2f;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: transform 0.2s;
+            user-select: none;
+        }
+        .floating-btn:hover {
+            transform: scale(1.1);
+            background: #a5d6a5;
+        }
+
+        /* Botão de informação com "i" estiloso */
+        .floating-btn-info {
+            position: fixed;
+            bottom: 60px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #0a2472;       /* azul escuro */
+            border: 3px solid white;
+            color: white;
+            font-family: 'Arial Black', 'Arial', sans-serif;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: transform 0.2s;
+            line-height: 1;
+            user-select: none;
+        }
+        .floating-btn-info:hover {
+            transform: scale(1.1);
+            background: #1e3a8a;
+        }
+
+        /* Modal estilo WinXP */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        .modal-winxp {
+            background: #ece9d8;
+            border: 3px solid #0a2472;
+            border-radius: 8px 8px 5px 5px;
+            width: 400px;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
+            font-family: 'Segoe UI', 'Tahoma', sans-serif;
+        }
+        .modal-title {
+            background: #0a2472;
+            color: white;
+            padding: 6px 10px;
+            font-weight: bold;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-title .window-controls {
+            display: flex;
+            gap: 4px;
+        }
+        .modal-title button {
+            background: #c0c0c0;
+            border: 1px solid #ffffff;
+            border-right-color: #404040;
+            border-bottom-color: #404040;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 0 6px;
+            border-radius: 3px;
+            min-width: 20px;
+            font-size: 12px;
+        }
+        .modal-title button:active {
+            border: 1px solid #404040;
+            border-right-color: #ffffff;
+            border-bottom-color: #ffffff;
+        }
+        .modal-content {
+            padding: 20px;
+            color: black;
+            text-align: center;
+        }
+        .modal-content button {
+            background: #d4d0c8;
+            border: 2px solid #ffffff;
+            border-right-color: #404040;
+            border-bottom-color: #404040;
+            padding: 8px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            min-width: 150px;
+        }
+        .modal-content button:active {
+            border: 2px solid #404040;
+            border-right-color: #ffffff;
+            border-bottom-color: #ffffff;
+        }
+
+        /* Notificação estilo WinXP */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #f2e9c7;
+            border: 2px solid #0a2472;
+            border-radius: 5px;
+            padding: 12px 20px;
+            color: #000;
+            font-weight: bold;
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.3);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        .notification::before {
+            content: "ℹ️";
+            font-size: 18px;
+        }
+
+        /* ========== NOVOS ESTILOS DA TELA DE LOGIN (APENAS ADICIONADOS) ========== */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        }
+        .login-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .login-card h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .login-card p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .login-input {
+            width: 100%;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 50px;
+            background: #f0f0f0;
+            font-size: 16px;
+            transition: all 0.3s;
+            outline: none;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .login-input:focus {
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+        }
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
+        }
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        .login-error {
+            color: #e74c3c;
+            margin-top: 15px;
+            font-size: 14px;
+            min-height: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ========== TELA DE LOGIN (NOVO) ========== -->
+<div id="loginOverlay" class="login-overlay">
+    <div class="login-card">
+        <h1>Bem-vindo</h1>
+        <p>Faça login para acessar o sistema</p>
+        <input type="text" id="loginUser" class="login-input" placeholder="Usuário" autofocus>
+        <input type="password" id="loginPass" class="login-input" placeholder="Senha" onkeypress="if(event.key==='Enter') fazerLogin()">
+        <button class="login-btn" onclick="fazerLogin()">Entrar</button>
+        <div id="loginError" class="login-error"></div>
+    </div>
+</div>
+
+<!-- ========== SEU CONTEÚDO ORIGINAL (NÃO ALTERADO) ========== -->
+<div class="sidebar">
+    <h2>ENTRADA DE DADOS</h2>
+
+    <!-- IDENTIFICAÇÃO -->
+    <div class="bloco">
+        <div class="campo"><label>Nome Completo</label><input type="text" id="i-nome" oninput="atualizarFicha()"></div>
+        <div class="linha">
+            <div class="campo"><label>CPF</label><input type="text" id="i-cpf" oninput="atualizarFicha()"></div>
+            <div class="campo"><label>Matrícula</label><input type="text" id="i-mat" oninput="atualizarFicha()"></div>
+        </div>
+    </div>
+
+    <!-- CARGO E CARREIRA -->
+    <div class="bloco">
+        <div class="campo"><label>Cargo / Especialidade</label><input type="text" id="i-cargo" oninput="atualizarFicha()"></div>
+        <div class="linha">
+            <div class="campo"><label>Código</label><input type="text" id="i-cod" oninput="atualizarFicha()"></div>
+            <div class="campo"><label>Etapa</label><input type="text" id="i-etapa" oninput="atualizarFicha()"></div>
+            <div class="campo"><label>CH</label>
+                <select id="i-ch" onchange="atualizarFicha()">
+                    <option value=""></option><option value="20H">20H</option><option value="30H">30H</option><option value="40H">40H</option>
+                </select>
+            </div>
+        </div>
+        <div class="linha">
+            <div class="campo"><label>Carreira</label>
+                <select id="i-carreira" onchange="atualizarFicha()">
+                    <option value=""></option>
+                    <option value="MAGISTÉRIO PÚBLICO DO DF">MAGISTÉRIO PÚBLICO DO DF</option>
+                    <option value="ASSISTÊNCIA À EDUCAÇÃO DO DF">ASSISTÊNCIA À EDUCAÇÃO DO DF</option>
+                </select>
+            </div>
+            <div class="campo"><label>Vínculo</label><input type="text" id="i-vinculo" value="ESTATUTÁRIO" onclick="this.value=''" onblur="if(this.value=='') this.value='ESTATUTÁRIO'" oninput="atualizarFicha()"></div>
+        </div>
+    </div>
+
+    <!-- DATAS E LOTAÇÃO (AGORA COM 2 CAMPOS E CHECKBOXES) -->
+    <div class="bloco">
+        <div class="linha">
+            <div class="campo">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="chk-apo" checked onchange="atualizarFicha()">
+                    <label for="chk-apo">Aposentadoria</label>
+                </div>
+                <input type="date" id="i-apo" onchange="atualizarFicha()">
+            </div>
+            <div class="campo">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="chk-des" checked onchange="atualizarFicha()">
+                    <label for="chk-des">Desligamento</label>
+                </div>
+                <input type="date" id="i-des" onchange="atualizarFicha()">
+            </div>
+        </div>
+        <div class="linha">
+            <div class="campo"><label>Admissão</label><input type="date" id="i-adm" onchange="atualizarFicha()"></div>
+        </div>
+        <div class="campo"><label>Lotação 1</label><input type="text" id="i-lot1" oninput="atualizarFicha()"></div>
+        <div class="campo"><label>Lotação 2</label><input type="text" id="i-lot2" oninput="atualizarFicha()"></div>
+    </div>
+
+    <!-- ORIGEM E PESSOAL -->
+    <div class="bloco">
+        <div class="linha">
+            <div class="campo"><label>Naturalidade</label><input type="text" id="i-nat" oninput="atualizarFicha()"></div>
+            <div class="campo" style="flex:0 0 60px"><label>UF</label>
+                <select id="i-uf-nat" onchange="atualizarFicha()">
+                    <option value=""></option><option value="AC">AC</option><option value="AL">AL</option><option value="AP">AP</option>
+                    <option value="AM">AM</option><option value="BA">BA</option><option value="CE">CE</option><option value="DF">DF</option>
+                    <option value="ES">ES</option><option value="GO">GO</option><option value="MA">MA</option><option value="MT">MT</option>
+                    <option value="MS">MS</option><option value="MG">MG</option><option value="PA">PA</option><option value="PB">PB</option>
+                    <option value="PR">PR</option><option value="PE">PE</option><option value="PI">PI</option><option value="RJ">RJ</option>
+                    <option value="RN">RN</option><option value="RS">RS</option><option value="RO">RO</option><option value="RR">RR</option>
+                    <option value="SC">SC</option><option value="SP">SP</option><option value="SE">SE</option><option value="TO">TO</option>
+                </select>
+            </div>
+            <div class="campo"><label>Nacionalidade</label><input type="text" id="i-nacionalidade" value="BRASILEIRA" onclick="this.value=''" onblur="if(this.value=='') this.value='BRASILEIRA'" oninput="atualizarFicha()"></div>
+        </div>
+        <div class="linha">
+            <div class="campo" style="flex:0 0 60px"><label>Sexo</label>
+                <select id="i-sexo" onchange="atualizarFicha()">
+                    <option value=""></option><option value="M">M</option><option value="F">F</option>
+                </select>
+            </div>
+            <div class="campo"><label>Nascimento</label><input type="date" id="i-nasc" onchange="atualizarFicha()"></div>
+            <div class="campo"><label>Estado Civil</label>
+                <select id="i-ecivil" onchange="atualizarFicha()">
+                    <option value=""></option><option value="SOLTEIRO">SOLTEIRO</option><option value="CASADO">CASADO</option>
+                    <option value="DIVORCIADO">DIVORCIADO</option><option value="SEPARADO JUDICIALMENTE">SEPARADO JUDICIALMENTE</option>
+                    <option value="VIÚVO">VIÚVO</option><option value="UNIÃO ESTÁVEL">UNIÃO ESTÁVEL</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- FILIAÇÃO E CÔNJUGE -->
+    <div class="bloco">
+        <div class="campo"><label>Nome da Mãe</label><input type="text" id="i-mae" oninput="atualizarFicha()"></div>
+        <div class="campo"><label>Nome do Pai</label><input type="text" id="i-pai" oninput="atualizarFicha()"></div>
+        <div class="campo"><label>Nome do Cônjuge</label><input type="text" id="i-conjuge" oninput="atualizarFicha()"></div>
+    </div>
+
+    <!-- TÍTULO DE ELEITOR -->
+    <div class="bloco">
+        <label style="font-size:10px; color:#38bdf8;">TÍTULO DE ELEITOR</label>
+        <div class="linha">
+            <div class="campo"><label>Número</label><input type="text" id="i-t-num" oninput="atualizarFicha()"></div>
+            <div class="campo"><label>Zona</label><input type="text" id="i-t-zona" oninput="atualizarFicha()"></div>
+            <div class="campo"><label>Seção</label><input type="text" id="i-t-sec" oninput="atualizarFicha()"></div>
+        </div>
+    </div>
+
+    <!-- ENDEREÇO -->
+    <div class="bloco">
+        <div class="campo"><label>Logradouro / Nº</label><input type="text" id="i-rua" oninput="atualizarFicha()"></div>
+        <div class="campo"><label>Complemento</label><input type="text" id="i-comp" oninput="atualizarFicha()"></div>
+        <div class="linha">
+            <div class="campo"><label>Bairro</label><input type="text" id="i-bairro" oninput="atualizarFicha()"></div>
+            <div class="campo"><label>Cidade</label><input type="text" id="i-cid" oninput="atualizarFicha()"></div>
+        </div>
+        <div class="linha">
+            <div class="campo" style="flex:0 0 60px"><label>UF</label>
+                <select id="i-uf-end" onchange="atualizarFicha()">
+                    <option value=""></option><option value="AC">AC</option><option value="AL">AL</option><option value="AP">AP</option>
+                    <option value="AM">AM</option><option value="BA">BA</option><option value="CE">CE</option><option value="DF">DF</option>
+                    <option value="ES">ES</option><option value="GO">GO</option><option value="MA">MA</option><option value="MT">MT</option>
+                    <option value="MS">MS</option><option value="MG">MG</option><option value="PA">PA</option><option value="PB">PB</option>
+                    <option value="PR">PR</option><option value="PE">PE</option><option value="PI">PI</option><option value="RJ">RJ</option>
+                    <option value="RN">RN</option><option value="RS">RS</option><option value="RO">RO</option><option value="RR">RR</option>
+                    <option value="SC">SC</option><option value="SP">SP</option><option value="SE">SE</option><option value="TO">TO</option>
+                </select>
+            </div>
+            <div class="campo"><label>CEP</label><input type="text" id="i-cep" oninput="atualizarFicha()"></div>
+        </div>
+    </div>
+
+    <!-- CONTATOS -->
+    <div class="bloco">
+        <div class="linha">
+            <div class="campo"><label>Telefone</label><input type="text" id="i-tel" oninput="atualizarFicha()"></div>
+            <div class="campo"><label>Celular 1</label><input type="text" id="i-cel1" oninput="atualizarFicha()"></div>
+            <div class="campo"><label>Celular 2</label><input type="text" id="i-cel2" oninput="atualizarFicha()"></div>
+        </div>
+        <div class="campo"><label>E-mail</label><input type="text" id="i-mail" oninput="this.value=this.value.toLowerCase(); atualizarFicha()"></div>
+    </div>
+</div>
+
+<div class="preview">
+    <button class="btn-print" onclick="window.print()">IMPRIMIR FICHA</button>
+    <div class="ficha">
+        <div class="header-ficha">
+            <div style="font-size:14px; font-weight:bold">GERÊNCIA DE CADASTRO FUNCIONAL</div>
+            <div style="font-size:11px">INFORMAÇÕES CADASTRAIS</div>
+        </div>
+        
+        <div class="ficha-grid">
+            <!-- LINHA 1 -->
+            <div class="linha-ficha">
+                <div class="celula w-40"><span class="lbl">NOME COMPLETO</span><span class="val" id="v-nome"></span></div>
+                <div class="celula w-20"><span class="lbl">CPF</span><span class="val" id="v-cpf"></span></div>
+                <div class="celula w-20"><span class="lbl">MATRÍCULA</span><span class="val" id="v-mat"></span></div>
+            </div>
+
+            <!-- LINHA 2 -->
+            <div class="linha-ficha">
+                <div class="celula w-30"><span class="lbl">CARGO / ESPECIALIDADE</span><span class="val" id="v-cargo"></span></div>
+                <div class="celula w-10"><span class="lbl">CÓDIGO</span><span class="val" id="v-cod"></span></div>
+                <div class="celula w-10"><span class="lbl">ETAPA</span><span class="val" id="v-etapa"></span></div>
+                <div class="celula w-20"><span class="lbl">CARREIRA</span><span class="val" id="v-carreira"></span></div>
+                <div class="celula w-15"><span class="lbl">VÍNCULO</span><span class="val" id="v-vinculo"></span></div>
+                <div class="celula w-10"><span class="lbl">CH</span><span class="val" id="v-ch"></span></div>
+            </div>
+
+            <!-- LINHA 3 (datas e lotação) -->
+            <div class="linha-ficha">
+                <div class="celula w-20" id="cell-adm"><span class="lbl">DATA ADMISSÃO</span><span class="val" id="v-adm"></span></div>
+                <div class="celula w-20" id="cell-apo"><span class="lbl">DATA APOSENTADORIA</span><span class="val" id="v-apo"></span></div>
+                <div class="celula w-20" id="cell-des"><span class="lbl">DATA DESLIGAMENTO</span><span class="val" id="v-des"></span></div>
+                <div class="celula w-40" id="cell-lot">
+                    <span class="lbl">LOTAÇÃO ATUAL</span>
+                    <div class="lotacao-container" id="lotacao-container"></div>
+                </div>
+            </div>
+
+            <!-- LINHA 4: NATURALIDADE, UF, NACIONALIDADE, SEXO, NASCIMENTO, ESTADO CIVIL, TÍTULO -->
+            <div class="linha-ficha">
+                <div class="celula w-15"><span class="lbl">NATURALIDADE</span><span class="val" id="v-nat"></span></div>
+                <div class="celula w-5"><span class="lbl">UF</span><span class="val" id="v-uf-nat"></span></div>
+                <div class="celula w-15"><span class="lbl">NACIONALIDADE</span><span class="val" id="v-nacionalidade"></span></div>
+                <div class="celula w-5"><span class="lbl">SEXO</span><span class="val" id="v-sexo"></span></div>
+                <div class="celula w-15"><span class="lbl">DATA NASCIMENTO</span><span class="val" id="v-nasc"></span></div>
+                <div class="celula w-15"><span class="lbl">ESTADO CIVIL</span><span class="val" id="v-ecivil"></span></div>
+                <div class="celula w-30"><span class="lbl">TÍTULO DE ELEITOR (Nº, ZONA, SEÇÃO)</span><span class="val" id="v-titulo"></span></div>
+            </div>
+
+            <!-- LINHA 5: FILIAÇÃO (MÃE / PAI) e CÔNJUGE (na mesma linha) -->
+            <div class="linha-ficha">
+                <div class="celula w-50"><span class="lbl">FILIAÇÃO (MÃE / PAI)</span><span class="val" id="v-filiacao"></span></div>
+                <div class="celula w-50"><span class="lbl">CÔNJUGE</span><span class="val" id="v-conjuge"></span></div>
+            </div>
+
+            <!-- LINHA 6: ENDEREÇO -->
+            <div class="linha-ficha">
+                <div class="celula"><span class="lbl">ENDEREÇO RESIDENCIAL</span><span class="val" id="v-endereco"></span></div>
+            </div>
+
+            <!-- LINHA 7: CONTATOS -->
+            <div class="linha-ficha">
+                <div class="celula w-15"><span class="lbl">TELEFONE</span><span class="val" id="v-tel"></span></div>
+                <div class="celula w-15"><span class="lbl">CELULAR 1</span><span class="val" id="v-cel1"></span></div>
+                <div class="celula w-15"><span class="lbl">CELULAR 2</span><span class="val" id="v-cel2"></span></div>
+                <div class="celula w-55"><span class="lbl">E-MAIL</span><span class="val" id="v-mail" style="text-transform:lowercase"></span></div>
+            </div>
+        </div>
+
+        <!-- INFORMAÇÃO READAPTADO (fora da grade) -->
+        <div style="margin-top: 10px; font-size: 12px; color: black; text-align: left;">
+            *Readaptado: <span id="v-readaptado"></span>
+        </div>
+        <!-- Mensagem de estado civil / cônjuge (só aparece quando necessário) -->
+        <div id="estado-civil-msg" style="font-size: 12px; color: black; text-align: left;"></div>
+    </div>
+
+    <!-- RODAPÉ – OCUPA TODA A LARGURA DA PREVIEW E FICA COLADO NA BASE -->
+    <div class="status-bar">
+        <div class="clippy-area">
+            <img id="clippy-img" src="imagens/clippy-13.gif" alt="Clippy" class="clippy-img">
+            <!-- botão para trocar frase do clippy -->
+            <button class="clippy-refresh" onclick="carregarFraseClippy()">💬</button>
+            <span id="frase-clippy">Clippy diz: a vida é belá</span>
+        </div>
+        <div class="copyright">
+            <a href="https://bmfolio.web.app/" title="" target="_blank" rel="noopener noreferrer">
+                <span>© <span id="ano-atual">2025</span> Bruno Moraes</span>
+            </a>
+            <a href="licenca-agplv3.html" title="Visualizar licença AGPLv3" target="_blank" rel="noopener noreferrer">AGPL-3.0 license</a>
+        </div>
+    </div>
+</div>
+
+<!-- Botão flutuante para carregar arquivo -->
+<div class="floating-btn" id="floatingBtn" onclick="abrirModal()">📁</div>
+
+<!-- Botão flutuante para informações com "i" estiloso -->
+<div class="floating-btn-info" id="infoBtn" onclick="abrirModalInfo()">i</div>
+
+<!-- Modal estilo WinXP para carregar arquivo -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this) fecharModal()">
+    <div class="modal-winxp">
+        <div class="modal-title">
+            <span>Carregar Arquivo</span>
+            <div class="window-controls">
+                <button onclick="return false;">─</button>
+                <button onclick="return false;">□</button>
+                <button onclick="fecharModal()">✕</button>
+            </div>
+        </div>
+        <div class="modal-content">
+            <p>Clique no botão abaixo e selecione o arquivo .txt</p>
+            <button id="btnCarregarModal">Carregar Arquivo</button>
+            <br>
+            <button onclick="fecharModal()">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal estilo WinXP para informações -->
+<div class="modal-overlay" id="modalInfoOverlay" onclick="if(event.target===this) fecharModalInfo()">
+    <div class="modal-winxp">
+        <div class="modal-title">
+            <span>Informações</span>
+            <div class="window-controls">
+                <button onclick="return false;">─</button>
+                <button onclick="return false;">□</button>
+                <button onclick="fecharModalInfo()">✕</button>
+            </div>
+        </div>
+        <div class="modal-content">
+            <p style="text-align: left; font-size: 13px;">
+                <strong>Como as informações são armazenadas?</strong><br><br>
+                Todos os dados inseridos permanecem apenas no seu navegador.<br>
+                Nenhuma informação é enviada a servidores externos.<br>
+            </p>
+            <button onclick="fecharModalInfo()">Fechar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Input file oculto para ser disparado pelo botão -->
+<input type="file" id="fileInput" accept=".txt" style="display: none;">
+
+<!-- Notificação estilo WinXP -->
+<div class="notification" id="notification"></div>
+
+<script>
+    // ========== NOVAS FUNÇÕES DE LOGIN (APENAS ADICIONADAS) ==========
+    const usuarios = [
+        { login: "fulano", senha: "Br@sil13" },
+        { login: "beltrano", senha: "Br@sil13" },
+        { login: "ciclano", senha: "Br@sil13" }
+    ];
+
+    function fazerLogin() {
+        const user = document.getElementById('loginUser').value.trim();
+        const pass = document.getElementById('loginPass').value.trim();
+        const errorDiv = document.getElementById('loginError');
+
+        const encontrado = usuarios.find(u => u.login === user && u.senha === pass);
+
+        if (encontrado) {
+            sessionStorage.setItem('logado', 'true');
+            document.getElementById('loginOverlay').style.display = 'none';
+            errorDiv.innerText = '';
+        } else {
+            errorDiv.innerText = 'Usuário ou senha inválidos';
+        }
+    }
+
+    // Verifica se já está logado
+    (function verificarLogin() {
+        if (sessionStorage.getItem('logado') === 'true') {
+            document.getElementById('loginOverlay').style.display = 'none';
+        }
+    })();
+
+    // ========== SEU CÓDIGO ORIGINAL (NÃO ALTERADO) ==========
+    function formatarData(data) {
+        if (!data) return '';
+        const partes = data.split('-');
+        if (partes.length === 3) {
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+        }
+        return '';
+    }
+
+    function atualizarFicha() {
+        const get = id => document.getElementById(id).value.toUpperCase();
+        
+        document.getElementById('v-nome').innerText = get('i-nome');
+        document.getElementById('v-cpf').innerText = get('i-cpf');
+        document.getElementById('v-mat').innerText = get('i-mat');
+
+        document.getElementById('v-cargo').innerText = get('i-cargo');
+        document.getElementById('v-cod').innerText = get('i-cod');
+        document.getElementById('v-etapa').innerText = get('i-etapa');
+        document.getElementById('v-carreira').innerText = get('i-carreira');
+        document.getElementById('v-vinculo').innerText = get('i-vinculo') || 'ESTATUTÁRIO';
+        document.getElementById('v-ch').innerText = get('i-ch');
+
+        document.getElementById('v-adm').innerText = formatarData(document.getElementById('i-adm').value);
+        
+        const chkApo = document.getElementById('chk-apo').checked;
+        const chkDes = document.getElementById('chk-des').checked;
+        
+        document.getElementById('i-apo').disabled = !chkApo;
+        document.getElementById('i-des').disabled = !chkDes;
+        
+        if (chkApo) {
+            document.getElementById('v-apo').innerText = formatarData(document.getElementById('i-apo').value) || '-----';
+        } else {
+            document.getElementById('v-apo').innerText = '';
+        }
+        
+        if (chkDes) {
+            document.getElementById('v-des').innerText = formatarData(document.getElementById('i-des').value) || '-----';
+        } else {
+            document.getElementById('v-des').innerText = '';
+        }
+        
+        const lot1 = get('i-lot1');
+        const lot2 = get('i-lot2');
+        const container = document.getElementById('lotacao-container');
+        container.innerHTML = '';
+        if (lot1) {
+            const d1 = document.createElement('div');
+            d1.className = 'lotacao-item';
+            d1.innerText = lot1;
+            container.appendChild(d1);
+        }
+        if (lot2 && lot2 !== lot1) {
+            const d2 = document.createElement('div');
+            d2.className = 'lotacao-item';
+            d2.innerText = lot2;
+            container.appendChild(d2);
+        }
+
+        const cellApo = document.getElementById('cell-apo');
+        const cellDes = document.getElementById('cell-des');
+        const cellLot = document.getElementById('cell-lot');
+
+        if (chkApo) {
+            cellApo.classList.remove('hidden-cell');
+        } else {
+            cellApo.classList.add('hidden-cell');
+        }
+        if (chkDes) {
+            cellDes.classList.remove('hidden-cell');
+        } else {
+            cellDes.classList.add('hidden-cell');
+        }
+
+        cellLot.classList.remove('w-40', 'w-60', 'w-80');
+        if (!chkApo && !chkDes) {
+            cellLot.classList.add('w-80');
+        } else if (!chkApo || !chkDes) {
+            cellLot.classList.add('w-60');
+        } else {
+            cellLot.classList.add('w-40');
+        }
+
+        document.getElementById('v-nat').innerText = get('i-nat');
+        document.getElementById('v-uf-nat').innerText = get('i-uf-nat');
+        document.getElementById('v-nacionalidade').innerText = get('i-nacionalidade') || 'BRASILEIRA';
+        document.getElementById('v-sexo').innerText = get('i-sexo');
+        document.getElementById('v-nasc').innerText = formatarData(document.getElementById('i-nasc').value);
+        document.getElementById('v-ecivil').innerText = get('i-ecivil');
+
+        const titulos = [get('i-t-num'), get('i-t-zona'), get('i-t-sec')].filter(t => t);
+        document.getElementById('v-titulo').innerText = titulos.join(' / ');
+
+        const mae = get('i-mae');
+        const pai = get('i-pai');
+        document.getElementById('v-filiacao').innerText = mae + (mae && pai ? ' / ' : '') + pai;
+
+        const estadoCivil = get('i-ecivil');
+        const conjugeInput = document.getElementById('i-conjuge').value.toUpperCase();
+        const conjugeVazio = conjugeInput.trim() === '';
+
+        let conjugeExibido = conjugeInput;
+        const estadosSemConjuge = ['VIÚVO', 'SEPARADO JUDICIALMENTE', 'DIVORCIADO'];
+        if (estadosSemConjuge.includes(estadoCivil) && conjugeVazio) {
+            conjugeExibido = '-----';
+        }
+        document.getElementById('v-conjuge').innerText = conjugeExibido;
+
+        const end = [get('i-rua'), get('i-comp'), get('i-bairro'), get('i-cid'), get('i-uf-end'), get('i-cep')].filter(e => e);
+        document.getElementById('v-endereco').innerText = end.join(' ');
+
+        document.getElementById('v-tel').innerText = document.getElementById('i-tel').value || '-----';
+        document.getElementById('v-cel1').innerText = document.getElementById('i-cel1').value || '-----';
+        document.getElementById('v-cel2').innerText = document.getElementById('i-cel2').value || '-----';
+        document.getElementById('v-mail').innerText = document.getElementById('i-mail').value.toLowerCase();
+
+        let msg = '';
+        if (estadoCivil === 'CASADO' && conjugeVazio) {
+            msg = '* Casado sem cônjuge';
+        } else if (estadosSemConjuge.includes(estadoCivil) && !conjugeVazio) {
+            msg = '* ' + estadoCivil + ' com cônjuge';
+        }
+        document.getElementById('estado-civil-msg').innerText = msg;
+    }
+
+    // Funções para o modal de carregar arquivo
+    function abrirModal() {
+        document.getElementById('modalOverlay').style.display = 'flex';
+    }
+    function fecharModal() {
+        document.getElementById('modalOverlay').style.display = 'none';
+    }
+
+    // Funções para o modal de informações
+    function abrirModalInfo() {
+        document.getElementById('modalInfoOverlay').style.display = 'flex';
+    }
+    function fecharModalInfo() {
+        document.getElementById('modalInfoOverlay').style.display = 'none';
+    }
+
+    function mostrarNotificacao(mensagem) {
+        const notif = document.getElementById('notification');
+        notif.style.display = 'flex';
+        notif.innerText = mensagem;
+        setTimeout(() => {
+            notif.style.display = 'none';
+        }, 4000);
+    }
+
+    function converterDataBrParaInput(dataStr) {
+        if (!dataStr || dataStr.trim() === '') return '';
+        const limpo = dataStr.trim();
+        if (limpo.length === 8 && /^\d+$/.test(limpo)) {
+            const dia = limpo.substring(0,2);
+            const mes = limpo.substring(2,4);
+            const ano = limpo.substring(4,8);
+            return `${ano}-${mes}-${dia}`;
+        }
+        return '';
+    }
+
+    function normalizarEstadoCivil(valor) {
+        if (!valor) return '';
+        const str = valor.toUpperCase().trim();
+        const semPrefixo = str.replace(/^\d+\s*-\s*/, '');
+        if (semPrefixo.includes('SOLTEIRO')) return 'SOLTEIRO';
+        if (semPrefixo.includes('CASADO')) return 'CASADO';
+        if (semPrefixo.includes('DIVORCIADO')) return 'DIVORCIADO';
+        if (semPrefixo.includes('SEPARADO')) return 'SEPARADO JUDICIALMENTE';
+        if (semPrefixo.includes('VIÚVO') || semPrefixo.includes('VIUVO')) return 'VIÚVO';
+        if (semPrefixo.includes('UNIÃO') || semPrefixo.includes('UNIAO')) return 'UNIÃO ESTÁVEL';
+        return '';
+    }
+
+    function processarArquivo(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const conteudo = e.target.result;
+            const linhas = conteudo.split('\n').filter(l => l.trim() !== '');
+            if (linhas.length < 2) {
+                mostrarNotificacao('Arquivo inválido: precisa de cabeçalho e dados.');
+                return;
+            }
+            const dados = linhas[1].split('|').map(s => s.trim());
+            
+            if (dados.length < 46) {
+                mostrarNotificacao('Arquivo com formato inesperado (número de colunas).');
+                return;
+            }
+
+            const idx = {
+                NOME: 2,
+                CPF: 3,
+                MATRICULA: 4,
+                DENOMINACAO: 5,
+                CARGO: 6,
+                REF_VERTICAL: 7,
+                REF_HORIZONTAL: 8,
+                CARGA_HORARIA: 9,
+                CARGA_HORARIA_SEC: 10,
+                DATA_ADMISSAO: 11,
+                DATA_APOSENTADORIA: 12,
+                DATA_DESLIGAMENTO: 13,
+                LOTACAO: 14,
+                LOT_SECUNDARIA: 15,
+                NATURALIDADE: 16,
+                UF_NASC: 17,
+                SEXO: 19,
+                DATA_NASCIMENTO: 20,
+                ESTADO_CIVIL: 21,
+                NOME_MAE: 22,
+                NOME_PAI: 23,
+                TITULO_NUM: 24,
+                ZONA: 25,
+                SECAO: 26,
+                ENDERECO: 27,
+                COMPLEMENTO: 28,
+                BAIRRO: 29,
+                MUNICIPIO: 30,
+                UF_END: 31,
+                CEP: 32,
+                DDD: 33,
+                TELEFONE: 34,
+                DDD2: 35,
+                TELEFONE2: 36,
+                DDD_CEL: 37,
+                CELULAR: 38,
+                EMAIL: 39,
+                CONJUGE: 41,
+                READAPTADO: 45
+            };
+
+            if (dados[idx.NOME]) document.getElementById('i-nome').value = dados[idx.NOME];
+            if (dados[idx.CPF]) document.getElementById('i-cpf').value = dados[idx.CPF];
+            if (dados[idx.MATRICULA]) document.getElementById('i-mat').value = dados[idx.MATRICULA];
+            if (dados[idx.DENOMINACAO]) document.getElementById('i-cargo').value = dados[idx.DENOMINACAO];
+            if (dados[idx.CARGO]) document.getElementById('i-cod').value = dados[idx.CARGO];
+            const vertical = dados[idx.REF_VERTICAL] || '';
+            const horizontal = dados[idx.REF_HORIZONTAL] || '';
+            if (vertical || horizontal) {
+                document.getElementById('i-etapa').value = (vertical + (vertical && horizontal ? '-' : '') + horizontal).trim();
+            }
+            const ch1 = parseInt(dados[idx.CARGA_HORARIA]) || 0;
+            const ch2 = parseInt(dados[idx.CARGA_HORARIA_SEC]) || 0;
+            const soma = ch1 + ch2;
+            const selectCH = document.getElementById('i-ch');
+            let opcaoSelecionada = false;
+            for (let opt of selectCH.options) {
+                if (opt.value === soma + 'H') {
+                    selectCH.value = opt.value;
+                    opcaoSelecionada = true;
+                    break;
+                }
+            }
+            if (!opcaoSelecionada) selectCH.value = '';
+
+            if (dados[idx.DATA_ADMISSAO]) document.getElementById('i-adm').value = converterDataBrParaInput(dados[idx.DATA_ADMISSAO]);
+            
+            if (dados[idx.DATA_APOSENTADORIA] && dados[idx.DATA_APOSENTADORIA] !== '') {
+                document.getElementById('i-apo').value = converterDataBrParaInput(dados[idx.DATA_APOSENTADORIA]);
+                document.getElementById('chk-apo').checked = true;
+            } else {
+                document.getElementById('i-apo').value = '';
+                document.getElementById('chk-apo').checked = false;
+            }
+            
+            if (dados[idx.DATA_DESLIGAMENTO] && dados[idx.DATA_DESLIGAMENTO] !== '') {
+                document.getElementById('i-des').value = converterDataBrParaInput(dados[idx.DATA_DESLIGAMENTO]);
+                document.getElementById('chk-des').checked = true;
+            } else {
+                document.getElementById('i-des').value = '';
+                document.getElementById('chk-des').checked = false;
+            }
+
+            if (dados[idx.LOTACAO]) document.getElementById('i-lot1').value = dados[idx.LOTACAO];
+            if (dados[idx.LOT_SECUNDARIA]) document.getElementById('i-lot2').value = dados[idx.LOT_SECUNDARIA];
+            if (dados[idx.NATURALIDADE]) document.getElementById('i-nat').value = dados[idx.NATURALIDADE];
+            if (dados[idx.UF_NASC]) document.getElementById('i-uf-nat').value = dados[idx.UF_NASC];
+            if (dados[idx.SEXO]) {
+                const sexoVal = dados[idx.SEXO].trim();
+                if (sexoVal === '1') document.getElementById('i-sexo').value = 'M';
+                else if (sexoVal === '2') document.getElementById('i-sexo').value = 'F';
+                else document.getElementById('i-sexo').value = '';
+            }
+            if (dados[idx.DATA_NASCIMENTO]) document.getElementById('i-nasc').value = converterDataBrParaInput(dados[idx.DATA_NASCIMENTO]);
+            if (dados[idx.ESTADO_CIVIL]) {
+                const ec = normalizarEstadoCivil(dados[idx.ESTADO_CIVIL]);
+                if (ec) document.getElementById('i-ecivil').value = ec;
+            }
+            if (dados[idx.NOME_MAE]) document.getElementById('i-mae').value = dados[idx.NOME_MAE];
+            if (dados[idx.NOME_PAI]) document.getElementById('i-pai').value = dados[idx.NOME_PAI];
+            if (dados[idx.CONJUGE]) document.getElementById('i-conjuge').value = dados[idx.CONJUGE];
+            if (dados[idx.TITULO_NUM]) document.getElementById('i-t-num').value = dados[idx.TITULO_NUM];
+            if (dados[idx.ZONA]) document.getElementById('i-t-zona').value = dados[idx.ZONA];
+            if (dados[idx.SECAO]) document.getElementById('i-t-sec').value = dados[idx.SECAO];
+            if (dados[idx.ENDERECO]) document.getElementById('i-rua').value = dados[idx.ENDERECO];
+            if (dados[idx.COMPLEMENTO]) document.getElementById('i-comp').value = dados[idx.COMPLEMENTO];
+            if (dados[idx.BAIRRO]) document.getElementById('i-bairro').value = dados[idx.BAIRRO];
+            if (dados[idx.MUNICIPIO]) document.getElementById('i-cid').value = dados[idx.MUNICIPIO];
+            if (dados[idx.UF_END]) document.getElementById('i-uf-end').value = dados[idx.UF_END];
+            if (dados[idx.CEP]) document.getElementById('i-cep').value = dados[idx.CEP];
+            const ddd = dados[idx.DDD] || '';
+            const tel = dados[idx.TELEFONE] || '';
+            if (ddd && tel && tel !== '0') document.getElementById('i-tel').value = ddd + tel;
+            const dddCel = dados[idx.DDD_CEL] || '';
+            const cel = dados[idx.CELULAR] || '';
+            if (dddCel && cel && cel !== '0') document.getElementById('i-cel1').value = dddCel + cel;
+            const ddd2 = dados[idx.DDD2] || '';
+            const tel2 = dados[idx.TELEFONE2] || '';
+            if (ddd2 && tel2 && tel2 !== '0') document.getElementById('i-cel2').value = ddd2 + tel2;
+            if (dados[idx.EMAIL]) document.getElementById('i-mail').value = dados[idx.EMAIL].toLowerCase();
+
+            let readaptado = dados[idx.READAPTADO] ? dados[idx.READAPTADO].toUpperCase() : 'N';
+            if (readaptado === 'S' || readaptado === 'SIM') {
+                document.getElementById('v-readaptado').innerText = 'sim';
+            } else {
+                document.getElementById('v-readaptado').innerText = 'não';
+            }
+
+            atualizarFicha();
+            fecharModal();
+            mostrarNotificacao('Arquivo carregado com sucesso!');
+        };
+        reader.readAsText(file, 'UTF-8');
+    }
+
+    document.getElementById('btnCarregarModal').addEventListener('click', function() {
+        document.getElementById('fileInput').click();
+    });
+
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+            processarArquivo(e.target.files[0]);
+        }
+        e.target.value = '';
+    });
+
+    // Função para carregar frase do Clippy (já existente)
+    async function carregarFraseClippy() {
+        const fraseSpan = document.getElementById('frase-clippy');
+        fraseSpan.innerText = "Clippy diz: Pensando..."; 
+        try {
+            const res = await fetch('https://api.adviceslip.com/advice');
+            const data = await res.json();
+            const transRes = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(data.slip.advice)}&langpair=en|pt-BR`);
+            const transData = await transRes.json();
+            fraseSpan.innerText = "Clippy diz: " + transData.responseData.translatedText;
+        } catch (e) {
+            fraseSpan.innerText = "Clippy diz: Parece que você está trabalhando duro hoje!";
+        }
+    }
+
+    // Array de imagens do clippy
+    const imagensClippy = [
+        'imagens/clippy-01.gif', 'imagens/clippy-03.gif', 'imagens/clippy-04.gif', 'imagens/clippy-06.gif', 
+        'imagens/clippy-07.gif', 'imagens/clippy-08.gif', 'imagens/clippy-09.gif', 'imagens/clippy-10.gif', 
+        'imagens/clippy-11.gif', 'imagens/clippy-12.gif', 'imagens/clippy-13.gif', 'imagens/clippy-14.gif', 
+        'imagens/clippy-16.gif', 'imagens/clippy-17.gif'
+    ];
+
+    function trocarClippy() {
+        const imgElement = document.getElementById('clippy-img');
+        const randomImg = imagensClippy[Math.floor(Math.random() * imagensClippy.length)];
+        imgElement.src = randomImg;
+    }
+    setInterval(trocarClippy, 10000); // troca a imagem a cada 10 segundos
+
+    window.onload = function() {
+        atualizarFicha();
+        document.getElementById('modalOverlay').style.display = 'none';
+        document.getElementById('modalInfoOverlay').style.display = 'none';
+        document.getElementById('v-readaptado').innerText = 'não';
+        // atualizar ano automaticamente
+        document.getElementById('ano-atual').textContent = new Date().getFullYear();
+        // carregar primeira frase do clippy
+        carregarFraseClippy();
+    };
+</script>
+
+</body>
+</html>
