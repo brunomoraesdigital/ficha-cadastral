@@ -598,13 +598,7 @@
             </div>
         </div>
         <div class="linha">
-            <div class="campo"><label>Carreira</label>
-                <select id="i-carreira" onchange="atualizarFicha()">
-                    <option value=""></option>
-                    <option value="MAGISTÉRIO PÚBLICO DO DF">MAGISTÉRIO PÚBLICO DO DF</option>
-                    <option value="ASSISTÊNCIA À EDUCAÇÃO DO DF">ASSISTÊNCIA À EDUCAÇÃO DO DF</option>
-                </select>
-            </div>
+			<div class="campo"><label>Carreira</label><input type="text" id="i-carreira" oninput="atualizarFicha()"></div>
             <div class="campo"><label>Vínculo</label><input type="text" id="i-vinculo" value="ESTATUTÁRIO" onclick="this.value=''" onblur="if(this.value=='') this.value='ESTATUTÁRIO'" oninput="atualizarFicha()"></div>
         </div>
     </div>
@@ -630,7 +624,13 @@
             <div class="campo"><label>Admissão</label><input type="date" id="i-adm" onchange="atualizarFicha()"></div>
         </div>
         <div class="campo"><label>Lotação 1</label><input type="text" id="i-lot1" oninput="atualizarFicha()"></div>
-        <div class="campo"><label>Lotação 2</label><input type="text" id="i-lot2" oninput="atualizarFicha()"></div>
+        <div class="campo">
+			<div class="checkbox-group">
+				<input type="checkbox" id="chk-lot2" onchange="atualizarFicha()">
+				<label for="chk-lot2">Lotação 2</label>
+			</div>
+			<input type="text" id="i-lot2" oninput="atualizarFicha()">
+		</div>
     </div>
 
     <div class="bloco">
@@ -921,22 +921,23 @@
             document.getElementById('v-des').innerText = '';
         }
         
-        const lot1 = get('i-lot1');
-        const lot2 = get('i-lot2');
-        const container = document.getElementById('lotacao-container');
-        container.innerHTML = '';
-        if (lot1) {
-            const d1 = document.createElement('div');
-            d1.className = 'lotacao-item';
-            d1.innerText = lot1;
-            container.appendChild(d1);
-        }
-        if (lot2 && lot2 !== lot1) {
-            const d2 = document.createElement('div');
-            d2.className = 'lotacao-item';
-            d2.innerText = lot2;
-            container.appendChild(d2);
-        }
+        const mostrarLot2 = document.getElementById('chk-lot2').checked;
+		const lot1 = get('i-lot1');
+		const lot2 = get('i-lot2');
+		const container = document.getElementById('lotacao-container');
+		container.innerHTML = '';
+		if (lot1) {
+			const d1 = document.createElement('div');
+			d1.className = 'lotacao-item';
+			d1.innerText = lot1;
+			container.appendChild(d1);
+		}
+		if (mostrarLot2 && lot2 && lot2 !== lot1) {
+			const d2 = document.createElement('div');
+			d2.className = 'lotacao-item';
+			d2.innerText = lot2;
+			container.appendChild(d2);
+		}
 
         const cellApo = document.getElementById('cell-apo');
         const cellDes = document.getElementById('cell-des');
@@ -1075,7 +1076,7 @@
             }
             const dados = linhas[1].split('|').map(s => s.trim());
             
-            if (dados.length < 46) {
+            if (dados.length < 47) {
                 mostrarNotificacao('Arquivo com formato inesperado (número de colunas).');
                 return;
             }
@@ -1119,7 +1120,8 @@
                 CELULAR: 38,
                 EMAIL: 39,
                 CONJUGE: 41,
-                READAPTADO: 45
+                READAPTADO: 45,
+				CARREIRA: 46
             };
 
             if (dados[idx.NOME]) document.getElementById('i-nome').value = dados[idx.NOME];
@@ -1144,6 +1146,7 @@
                     break;
                 }
             }
+			if (dados[idx.CARREIRA]) document.getElementById('i-carreira').value = dados[idx.CARREIRA];
             if (!opcaoSelecionada) selectCH.value = '';
 
             if (dados[idx.DATA_ADMISSAO]) document.getElementById('i-adm').value = converterDataBrParaInput(dados[idx.DATA_ADMISSAO]);
@@ -1481,4 +1484,3 @@
 
 </body>
 </html>
-
