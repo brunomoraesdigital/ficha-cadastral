@@ -305,7 +305,7 @@
 
         .floating-btn {
             position: fixed;
-            bottom: 130px;
+            bottom: 200px;
             right: 30px;
             width: 60px;
             height: 60px;
@@ -355,6 +355,30 @@
             transform: scale(1.1);
             background: #1e3a8a;
         }
+		.floating-btn-tutorial {
+			position: fixed;
+			bottom: 130px;
+			right: 30px;
+			width: 60px;
+			height: 60px;
+			border-radius: 50%;
+			background: #ffd700;
+			border: 3px solid #b8860b;
+			color: #000;
+			font-size: 28px;
+			cursor: pointer;
+			box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			z-index: 1000;
+			transition: transform 0.2s;
+			user-select: none;
+		}
+		.floating-btn-tutorial:hover {
+			transform: scale(1.1);
+			background: #ffc125;
+		}
 
         .modal-overlay {
             display: none;
@@ -426,7 +450,116 @@
             border-right-color: #ffffff;
             border-bottom-color: #ffffff;
         }
+.modal-tutorial {
+    width: 700px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+}
+.modal-tutorial .modal-content {
+    flex: 1;
+    padding: 10px;
+    display: flex;
+    gap: 15px;
+    overflow-y: scroll; /* barra de rolagem no modal inteiro */
+}
+.tutorial-left-col {
+    flex: 0 0 150px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+    justify-content: flex-start;
+    align-items: center; /* centraliza horizontalmente os itens */
+}
+.clippy-box {
+    width: 120px;        /* largura fixa */
+    height: 90px;        /* altura fixa */
+    margin: 0 auto;      /* centraliza o contêiner na coluna */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* remova qualquer padding ou background que possa interferir */
+    padding: 0;
+    background: transparent;
+}
+.tutorial-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* mantém a proporção sem estourar o contêiner */
+    cursor: pointer;
+    border-radius: 5px;
+    display: block;
+}
+.tutorial-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* centraliza horizontalmente */
+    gap: 5px;
+    width: 100%;
+}
+.tutorial-buttons button {
+    background: #d4d0c8;
+    border: 2px solid #ffffff;
+    border-right-color: #404040;
+    border-bottom-color: #404040;
+    padding: 5px 10px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 12px;
+    border-radius: 3px;
+    width: 120px; /* largura fixa para alinhamento */
+}
+.tutorial-buttons button:hover {
+    background: #c0c0c0; /* leve escurecimento no hover */
+}
+.tutorial-buttons button:active {
+    border: 2px solid #404040;
+    border-right-color: #ffffff;
+    border-bottom-color: #ffffff;
+}
+.tutorial-buttons button:hover {
+    background: #c0c0c0; /* levemente mais escuro */
+}
+.tutorial-buttons button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.tutorial-right-col {
+    flex: 1; /* ocupa o espaço restante */
+    display: flex;
+    flex-direction: column;
+}
+.tutorial-bubble {
+    background: white;
+    color: black;
+    padding: 0px 15px 15px 15px; /* aumenta o padding superior */
+    border-radius: 15px;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.4;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    width: 100%;
+    white-space: pre-wrap;
+    overflow: visible; /* garante que nada seja cortado */
+	text-align: left;
+}
 
+.tutorial-bubble::before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 20px;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid white;
+}
+
+.tutorial-bubble {
+    white-space: pre-wrap;  /* preserva quebras de linha e espaços */
+}
         .notification {
             position: fixed;
             top: 20px;
@@ -548,6 +681,17 @@
                 padding: 12px;
             }
         }
+		.tutorial-buttons button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.tutorial-bubble a {
+    color: #0066cc;
+    text-decoration: underline;
+}
+.tutorial-bubble a:hover {
+    text-decoration: none;
+}
     </style>
 </head>
 <body>
@@ -804,6 +948,8 @@
 
 <div class="floating-btn" id="floatingBtn" onclick="abrirModal()">📁</div>
 
+<div class="floating-btn-tutorial" id="floatingBtnTutorial" onclick="abrirModalTutorial()">📘</div>
+
 <div class="floating-btn-info" id="infoBtn" onclick="abrirModalInfo()">i</div>
 
 <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this) fecharModal()">
@@ -841,10 +987,45 @@
                 Todos os dados inseridos permanecem apenas no seu navegador.<br>
                 Nenhuma informação é enviada a servidores externos.<br>
             </p>
+			<p style="text-align: left; font-size: 13px;">versão: 1.4 (050326.1009)</p>
             <button onclick="fecharModalInfo()">Fechar</button>
         </div>
     </div>
 </div>
+
+<!-- -->
+<div class="modal-overlay" id="modalTutorialOverlay" onclick="if(event.target===this) fecharModalTutorial()">
+    <div class="modal-winxp modal-tutorial">
+        <div class="modal-title">
+            <span>Tutorial</span>
+            <div class="window-controls">
+                <button onclick="return false;">─</button>
+                <button onclick="return false;">□</button>
+                <button onclick="fecharModalTutorial()">✕</button>
+            </div>
+        </div>
+<!-- -->
+<div class="modal-content tutorial-content">
+    <div class="tutorial-left-col">
+        <div class="clippy-box">
+            <img id="tutorialImage" src="imagens/clippy-13.gif" alt="Clippy" class="tutorial-img" onclick="proximoPassoTutorial()">
+        </div>
+        <div class="tutorial-buttons">
+            <button id="btnTutorialAnterior" onclick="anteriorPassoTutorial()">◀ Anterior</button>
+            <button id="btnTutorialProximo" onclick="proximoPassoTutorial()">Próximo ▶</button>
+            <button id="btnTutorialInicio" onclick="primeiroPassoTutorial()">Início</button>
+        </div>
+    </div>
+    <div class="tutorial-right-col">
+        <div class="tutorial-bubble">
+            <div id="tutorialText"></div>
+        </div>
+    </div>
+</div>
+<!-- -->
+    </div>
+</div>
+<!-- -->
 
 <input type="file" id="fileInput" accept=".txt" style="display: none;">
 
@@ -1030,6 +1211,134 @@
     function fecharModalInfo() {
         document.getElementById('modalInfoOverlay').style.display = 'none';
     }
+	/**/
+/***********************/
+const tutorialSteps = [
+    {
+        text: "<strong style='font-size:1.2em;'>Como funciona um Extrator de Dados</strong><br><br>" +
+              "Um extrator de dados tem uma função simples e clara: copiar as informações exatamente como elas estão na fonte de origem. Ele não interpreta, não corrige e não ajusta. Ele apenas espelha.<br><br>" +
+              "Pense no extrator como uma câmera 📸. A câmera não melhora a cena nem corrige o que está errado. Ela registra o que está ali. Se algo saiu errado na foto, o problema está na cena, não na câmera.<br><br>" +
+              "Por isso, o que vem do extrator não deve alterar dados. Se ele modifica alguma informação, deixa de ser um espelho fiel da origem. Isso compromete a confiança da informação prestada.<br><br>" +
+              "Se um dado estiver incorreto, o lugar certo para corrigir é a origem. Ajusta-se na fonte e então realiza-se uma nova extração.<br><br>" +
+              "Assim, mantém-se a consistência, a integridade e a confiança nas informações."
+    },
+    {
+        text: "<strong style='font-size:1.2em;'>Acessar o extrator</strong><br><br>" +
+              "1. Clicar no botão Extrator<br>" +
+              "2. Clicar em Consulta Modelos<br>" +
+              "3. Clicar na Lupa<br>" +
+              "4. Em \"Modelos de Consultas Retornadas\" > \"Descrição\", clicar no extrator cadastroFuncionalAtualizado<br><br>" +
+              "Observação: atualmente o nome do extrator é cadastroFuncionalAtualizado."
+    },
+    {
+        text: "<strong style='font-size:1.2em;'>Acessar os filtros</strong><br><br>" +
+              "1. Clicar em Filtros<br>" +
+              "2. Atualizar os campos:<br>" +
+              "   - referência: mês e ano atual (ex.: 032026)<br>" +
+              "   - referência: mês e ano atual (ex.: 032026)<br>" +
+              "   - matrícula: 8 dígitos (ex.: 00000000)"
+    },
+    {
+        text: "<strong style='font-size:1.2em;'>Acessar execução</strong><br><br>" +
+              "1. Clicar em Execução<br>" +
+              "2. Clicar no botão Confirmar"
+    },
+    {
+        text: "<strong style='font-size:1.2em;'>Baixar o arquivo</strong><br><br>" +
+              "1. Localizar no canto inferior esquerdo os botões \"Exportar para\"<br>" +
+              "   - usar a barra de rolagem horizontal<br>" +
+              "2. Clicar no botão exportar txt<br>" +
+              "3. Salvar o arquivo"
+    },
+    {
+        text: "<strong style='font-size:1.2em;'>Gerar ficha cadastro funcional</strong><br><br>" +
+              "1. Abrir a aplicação<br>" +
+              "   - Link: <a href='https://brunomoraesdigital.github.io/ficha-cadastral/' target='_blank' style='color: #0066cc; text-decoration: underline;'>https://brunomoraesdigital.github.io/ficha-cadastral/</a><br><br>" +
+              "2. Carregar o arquivo<br>" +
+              "   - botão que tem uma pasta<br><br>" +
+              "3. Clicar em Carregar Arquivo<br>" +
+              "4. Localizar o arquivo<br>" +
+              "5. Selecionar o arquivo<br>" +
+              "6. Clicar em Abrir<br><br>" +
+              "- O arquivo será carregado e os campos serão preenchidos automaticamente."
+    },
+    {
+        text: "<strong style='font-size:1.2em;'>Preenchimento manual (caso o arquivo não seja carregado)</strong><br><br>" +
+              "Na impossibilidade de carregar o arquivo, os campos podem ser preenchidos manualmente."
+    }
+];
+/**********************/
+
+let currentTutorialStep = 0;
+
+// Função para trocar a imagem do Clippy aleatoriamente (reutiliza o array global imagensClippy)
+function trocarImagemTutorial() {
+    const imgElement = document.getElementById('tutorialImage');
+    if (imgElement && typeof imagensClippy !== 'undefined') {
+        const randomImg = imagensClippy[Math.floor(Math.random() * imagensClippy.length)];
+        imgElement.src = randomImg;
+    }
+}
+
+function abrirModalTutorial() {
+    document.getElementById('modalTutorialOverlay').style.display = 'flex';
+    currentTutorialStep = 0;
+    updateTutorialStep();
+    trocarImagemTutorial(); // imagem aleatória inicial do Clippy
+}
+
+function fecharModalTutorial() {
+    document.getElementById('modalTutorialOverlay').style.display = 'none';
+}
+
+/**/
+function proximoPassoTutorial() {
+    if (currentTutorialStep < tutorialSteps.length - 1) {
+        currentTutorialStep++;
+        updateTutorialStep();
+        trocarImagemTutorial();
+    }
+}
+
+function anteriorPassoTutorial() {
+    if (currentTutorialStep > 0) {
+        currentTutorialStep--;
+        updateTutorialStep();
+        trocarImagemTutorial();
+    }
+}
+
+function primeiroPassoTutorial() {
+    currentTutorialStep = 0;
+    updateTutorialStep();
+    trocarImagemTutorial();
+}
+
+function atualizarBotoesTutorial() {
+    const btnAnterior = document.getElementById('btnTutorialAnterior');
+    const btnProximo = document.getElementById('btnTutorialProximo');
+    const btnInicio = document.getElementById('btnTutorialInicio');
+    
+    if (btnAnterior) {
+        btnAnterior.disabled = (currentTutorialStep === 0);
+    }
+    if (btnProximo) {
+        btnProximo.disabled = (currentTutorialStep === tutorialSteps.length - 1);
+    }
+    if (btnInicio) {
+        btnInicio.disabled = (currentTutorialStep === 0);
+    }
+}
+
+function updateTutorialStep() {
+    const step = tutorialSteps[currentTutorialStep];
+    document.getElementById('tutorialText').innerHTML = step.text; // era innerText
+    atualizarBotoesTutorial();
+}
+/**/
+
+setInterval(trocarImagemTutorial, 10000);
+	/**/
 
     function mostrarNotificacao(mensagem) {
         const notif = document.getElementById('notification');
@@ -1470,6 +1779,7 @@
         atualizarFicha();
         document.getElementById('modalOverlay').style.display = 'none';
         document.getElementById('modalInfoOverlay').style.display = 'none';
+		document.getElementById('modalTutorialOverlay').style.display = 'none';
         document.getElementById('v-readaptado').innerText = 'não';
 
         document.getElementById('ano-atual').textContent = new Date().getFullYear();
