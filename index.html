@@ -168,7 +168,6 @@
             font-weight: bold; 
             text-transform: uppercase; 
             display: block; 
-            /*color: #444; */
             margin-bottom: 2px; 
         }
         
@@ -461,7 +460,7 @@
     padding: 10px;
     display: flex;
     gap: 15px;
-    overflow-y: scroll; /* barra de rolagem no modal inteiro */
+    overflow-y: scroll; 
 }
 .tutorial-left-col {
     flex: 0 0 150px;
@@ -470,23 +469,22 @@
     gap: 10px;
     height: 100%;
     justify-content: flex-start;
-    align-items: center; /* centraliza horizontalmente os itens */
+    align-items: center; 
 }
 .clippy-box {
-    width: 120px;        /* largura fixa */
-    height: 90px;        /* altura fixa */
-    margin: 0 auto;      /* centraliza o contêiner na coluna */
+    width: 120px;        
+    height: 90px;        
+    margin: 0 auto;      
     display: flex;
     align-items: center;
     justify-content: center;
-    /* remova qualquer padding ou background que possa interferir */
     padding: 0;
     background: transparent;
 }
 .tutorial-img {
     width: 100%;
     height: 100%;
-    object-fit: contain; /* mantém a proporção sem estourar o contêiner */
+    object-fit: contain;
     cursor: pointer;
     border-radius: 5px;
     display: block;
@@ -494,7 +492,7 @@
 .tutorial-buttons {
     display: flex;
     flex-direction: column;
-    align-items: center; /* centraliza horizontalmente */
+    align-items: center; 
     gap: 5px;
     width: 100%;
 }
@@ -508,10 +506,10 @@
     cursor: pointer;
     font-size: 12px;
     border-radius: 3px;
-    width: 120px; /* largura fixa para alinhamento */
+    width: 120px; 
 }
 .tutorial-buttons button:hover {
-    background: #c0c0c0; /* leve escurecimento no hover */
+    background: #c0c0c0; 
 }
 .tutorial-buttons button:active {
     border: 2px solid #404040;
@@ -519,21 +517,21 @@
     border-bottom-color: #ffffff;
 }
 .tutorial-buttons button:hover {
-    background: #c0c0c0; /* levemente mais escuro */
+    background: #c0c0c0; 
 }
 .tutorial-buttons button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 .tutorial-right-col {
-    flex: 1; /* ocupa o espaço restante */
+    flex: 1; 
     display: flex;
     flex-direction: column;
 }
 .tutorial-bubble {
     background: white;
     color: black;
-    padding: 0px 15px 15px 15px; /* aumenta o padding superior */
+    padding: 0px 15px 15px 15px; 
     border-radius: 15px;
     position: relative;
     font-size: 14px;
@@ -541,7 +539,7 @@
     box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
     width: 100%;
     white-space: pre-wrap;
-    overflow: visible; /* garante que nada seja cortado */
+    overflow: visible; 
 	text-align: left;
 }
 
@@ -558,7 +556,7 @@
 }
 
 .tutorial-bubble {
-    white-space: pre-wrap;  /* preserva quebras de linha e espaços */
+    white-space: pre-wrap;  
 }
         .notification {
             position: fixed;
@@ -987,7 +985,7 @@
                 Todos os dados inseridos permanecem apenas no seu navegador.<br>
                 Nenhuma informação é enviada a servidores externos.<br>
             </p>
-			<p style="text-align: left; font-size: 13px;">versão: 1.4 - atualizado em 05/03/2026 às 10:09</p>
+			<p style="text-align: left; font-size: 13px;">versão: 1.4 (050326.1009)</p>
             <button onclick="fecharModalInfo()">Fechar</button>
         </div>
     </div>
@@ -1211,8 +1209,8 @@
     function fecharModalInfo() {
         document.getElementById('modalInfoOverlay').style.display = 'none';
     }
-	/**/
-/***********************/
+	
+
 const tutorialSteps = [
     {
         text: "<strong style='font-size:1.2em;'>Como funciona um Extrator de Dados</strong><br><br>" +
@@ -1267,7 +1265,7 @@ const tutorialSteps = [
               "Na impossibilidade de carregar o arquivo, os campos podem ser preenchidos manualmente."
     }
 ];
-/**********************/
+
 
 let currentTutorialStep = 0;
 
@@ -1291,7 +1289,7 @@ function fecharModalTutorial() {
     document.getElementById('modalTutorialOverlay').style.display = 'none';
 }
 
-/**/
+
 function proximoPassoTutorial() {
     if (currentTutorialStep < tutorialSteps.length - 1) {
         currentTutorialStep++;
@@ -1335,10 +1333,10 @@ function updateTutorialStep() {
     document.getElementById('tutorialText').innerHTML = step.text; // era innerText
     atualizarBotoesTutorial();
 }
-/**/
+
 
 setInterval(trocarImagemTutorial, 10000);
-	/**/
+	
 
     function mostrarNotificacao(mensagem) {
         const notif = document.getElementById('notification');
@@ -1794,4 +1792,3 @@ setInterval(trocarImagemTutorial, 10000);
 
 </body>
 </html>
-
