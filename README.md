@@ -5,7 +5,15 @@
 Bem-vindo ao **Ficha Cadastral Funcional** — uma aplicação web simples e direta para organizar informações cadastrais de servidores, colaboradores ou qualquer outro perfil que exija um registro completo e bem estruturado.
 
 🌐 **Acesse a aplicação:**  
-https://brunomoraesdigital.github.io/ficha-cadastral/
+
+<p align="left">
+
+<a href="https://brunomoraesdigital.github.io/ficha-cadastral/">
+<img src="https://img.shields.io/badge/🌐_Abrir_Aplicação-2ea44f?style=for-the-badge">
+</a>
+
+</p>
+
 
 ---
 
