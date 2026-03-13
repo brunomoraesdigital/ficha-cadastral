@@ -1406,7 +1406,7 @@
             const conjugeVazio = conjugeInput.trim() === '';
 
             let conjugeExibido = conjugeInput;
-            const estadosSemConjuge = ['VIÚVO', 'SEPARADO JUDICIALMENTE', 'DIVORCIADO'];
+            const estadosSemConjuge = ['SOLTEIRO', 'VIÚVO', 'SEPARADO JUDICIALMENTE', 'DIVORCIADO'];
             if (estadosSemConjuge.includes(estadoCivil) && conjugeVazio) {
                 conjugeExibido = '-----';
             }
