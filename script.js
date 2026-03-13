@@ -1,0 +1,759 @@
+    const usuarios = [
+		{ login: "gecaf2026", senha: "Br@sil13" },
+        { login: "fulano", senha: "Br@sil13" },
+        { login: "beltrano", senha: "Br@sil13" },
+        { login: "ciclano", senha: "Br@sil13" }
+    ];
+
+    function fazerLogin() {
+        const user = document.getElementById('loginUser').value.trim();
+        const pass = document.getElementById('loginPass').value.trim();
+        const errorDiv = document.getElementById('loginError');
+
+        const encontrado = usuarios.find(u => u.login === user && u.senha === pass);
+
+        if (encontrado) {
+            sessionStorage.setItem('logado', 'true');
+            document.getElementById('loginOverlay').style.display = 'none';
+            errorDiv.innerText = '';
+        } else {
+            errorDiv.innerText = 'Usuário ou senha inválidos';
+        }
+    }
+
+    (function verificarLogin() {
+        document.getElementById('loginOverlay').style.display = 'none';
+    })();
+
+    function formatarData(data) {
+        if (!data) return '';
+        const partes = data.split('-');
+        if (partes.length === 3) {
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+        }
+        return '';
+    }
+
+    function atualizarFicha() {
+        const get = id => document.getElementById(id).value.toUpperCase();
+        
+        document.getElementById('v-nome').innerText = get('i-nome');
+        document.getElementById('v-cpf').innerText = get('i-cpf');
+        document.getElementById('v-mat').innerText = get('i-mat');
+
+        document.getElementById('v-cargo').innerText = get('i-cargo');
+        document.getElementById('v-cod').innerText = get('i-cod');
+        document.getElementById('v-etapa').innerText = get('i-etapa');
+        document.getElementById('v-carreira').innerText = get('i-carreira');
+        document.getElementById('v-vinculo').innerText = get('i-vinculo') || 'ESTATUTÁRIO';
+        document.getElementById('v-ch').innerText = get('i-ch');
+
+        document.getElementById('v-adm').innerText = formatarData(document.getElementById('i-adm').value);
+        
+        const chkApo = document.getElementById('chk-apo').checked;
+        const chkDes = document.getElementById('chk-des').checked;
+        
+        document.getElementById('i-apo').disabled = !chkApo;
+        document.getElementById('i-des').disabled = !chkDes;
+        
+        if (chkApo) {
+            document.getElementById('v-apo').innerText = formatarData(document.getElementById('i-apo').value) || '-----';
+        } else {
+            document.getElementById('v-apo').innerText = '';
+        }
+        
+        if (chkDes) {
+            document.getElementById('v-des').innerText = formatarData(document.getElementById('i-des').value) || '-----';
+        } else {
+            document.getElementById('v-des').innerText = '';
+        }
+        
+        const mostrarLot2 = document.getElementById('chk-lot2').checked;
+		const lot1 = get('i-lot1');
+		const lot2 = get('i-lot2');
+		const container = document.getElementById('lotacao-container');
+		container.innerHTML = '';
+		if (lot1) {
+			const d1 = document.createElement('div');
+			d1.className = 'lotacao-item';
+			d1.innerText = lot1;
+			container.appendChild(d1);
+		}
+		if (mostrarLot2 && lot2 && lot2 !== lot1) {
+			const d2 = document.createElement('div');
+			d2.className = 'lotacao-item';
+			d2.innerText = lot2;
+			container.appendChild(d2);
+		}
+
+        const cellApo = document.getElementById('cell-apo');
+        const cellDes = document.getElementById('cell-des');
+        const cellLot = document.getElementById('cell-lot');
+
+        if (chkApo) {
+            cellApo.classList.remove('hidden-cell');
+        } else {
+            cellApo.classList.add('hidden-cell');
+        }
+        if (chkDes) {
+            cellDes.classList.remove('hidden-cell');
+        } else {
+            cellDes.classList.add('hidden-cell');
+        }
+
+        cellLot.classList.remove('w-40', 'w-60', 'w-80');
+        if (!chkApo && !chkDes) {
+            cellLot.classList.add('w-80');
+        } else if (!chkApo || !chkDes) {
+            cellLot.classList.add('w-60');
+        } else {
+            cellLot.classList.add('w-40');
+        }
+
+        document.getElementById('v-nat').innerText = get('i-nat');
+        document.getElementById('v-uf-nat').innerText = get('i-uf-nat');
+        document.getElementById('v-nacionalidade').innerText = get('i-nacionalidade') || 'BRASILEIRA';
+        document.getElementById('v-sexo').innerText = get('i-sexo');
+        document.getElementById('v-nasc').innerText = formatarData(document.getElementById('i-nasc').value);
+        document.getElementById('v-ecivil').innerText = get('i-ecivil');
+
+        const titulos = [get('i-t-num'), get('i-t-zona'), get('i-t-sec')].filter(t => t);
+        document.getElementById('v-titulo').innerText = titulos.join(' / ');
+
+        const mae = get('i-mae');
+        const pai = get('i-pai');
+        document.getElementById('v-filiacao').innerText = mae + (mae && pai ? ' / ' : '') + pai;
+
+        const estadoCivil = get('i-ecivil');
+        const conjugeInput = document.getElementById('i-conjuge').value.toUpperCase();
+        const conjugeVazio = conjugeInput.trim() === '';
+
+        let conjugeExibido = conjugeInput;
+        const estadosSemConjuge = ['VIÚVO', 'SEPARADO JUDICIALMENTE', 'DIVORCIADO'];
+        if (estadosSemConjuge.includes(estadoCivil) && conjugeVazio) {
+            conjugeExibido = '-----';
+        }
+        document.getElementById('v-conjuge').innerText = conjugeExibido;
+
+        let endParts = [
+            document.getElementById('i-rua').value.toUpperCase(),
+            document.getElementById('i-comp').value.toUpperCase(),
+            document.getElementById('i-bairro').value.toUpperCase(),
+            document.getElementById('i-cid').value.toUpperCase(),
+            document.getElementById('i-uf-end').value.toUpperCase()
+        ];
+        let endString = endParts.filter(e => e).join(' ');
+        const cepVal = document.getElementById('i-cep').value; 
+        if (cepVal) {
+            endString += (endString ? ' ' : '') + 'CEP ' + cepVal;
+        }
+        document.getElementById('v-endereco').innerText = endString;
+        // ==========================================================
+
+        document.getElementById('v-tel').innerText = document.getElementById('i-tel').value || '-----';
+        document.getElementById('v-cel1').innerText = document.getElementById('i-cel1').value || '-----';
+        document.getElementById('v-cel2').innerText = document.getElementById('i-cel2').value || '-----';
+        document.getElementById('v-mail').innerText = document.getElementById('i-mail').value.toLowerCase();
+
+        let msg = '';
+        if (estadoCivil === 'CASADO' && conjugeVazio) {
+            msg = '* Casado sem cônjuge';
+        } else if (estadosSemConjuge.includes(estadoCivil) && !conjugeVazio) {
+            msg = '* ' + estadoCivil + ' com cônjuge';
+        }
+        document.getElementById('estado-civil-msg').innerText = msg;
+    }
+
+    function abrirModal() {
+        document.getElementById('modalOverlay').style.display = 'flex';
+    }
+    function fecharModal() {
+        document.getElementById('modalOverlay').style.display = 'none';
+    }
+
+    function abrirModalInfo() {
+        document.getElementById('modalInfoOverlay').style.display = 'flex';
+    }
+    function fecharModalInfo() {
+        document.getElementById('modalInfoOverlay').style.display = 'none';
+    }
+	
+
+const tutorialSteps = [
+    {
+        text: "<strong style='font-size:1.2em;'>Como funciona um Extrator de Dados</strong><br><br>" +
+              "Um extrator de dados tem uma função simples e clara: copiar as informações exatamente como elas estão na fonte de origem. Ele não interpreta, não corrige e não ajusta. Ele apenas espelha.<br><br>" +
+              "Pense no extrator como uma câmera 📸. A câmera não melhora a cena nem corrige o que está errado. Ela registra o que está ali. Se algo saiu errado na foto, o problema está na cena, não na câmera.<br><br>" +
+              "Por isso, o que vem do extrator não deve alterar dados. Se ele modifica alguma informação, deixa de ser um espelho fiel da origem. Isso compromete a confiança da informação prestada.<br><br>" +
+              "Se um dado estiver incorreto, o lugar certo para corrigir é a origem. Ajusta-se na fonte e então realiza-se uma nova extração.<br><br>" +
+              "Assim, mantém-se a consistência, a integridade e a confiança nas informações."
+    },
+    {
+        text: "<strong style='font-size:1.2em;'>Acessar o extrator</strong><br><br>" +
+              "1. Clicar no botão Extrator<br>" +
+              "2. Clicar em Consulta Modelos<br>" +
+              "3. Clicar na Lupa<br>" +
+              "4. Em \"Modelos de Consultas Retornadas\" > \"Descrição\", clicar no extrator cadastroFuncionalAtualizado<br><br>" +
+              "Observação: atualmente o nome do extrator é cadastroFuncionalAtualizado."
+    },
+    {
+        text: "<strong style='font-size:1.2em;'>Acessar os filtros</strong><br><br>" +
+              "1. Clicar em Filtros<br>" +
+              "2. Atualizar os campos:<br>" +
+              "   -> referência: mês e ano atual (ex.: 032026)<br>" +
+              "   -> referência: mês e ano atual (ex.: 032026)<br>" +
+              "   -> matrícula: 8 dígitos (ex.: 00000000)"
+    },
+    {
+        text: "<strong style='font-size:1.2em;'>Acessar execução</strong><br><br>" +
+              "1. Clicar em Execução<br>" +
+              "2. Clicar no botão Confirmar"
+    },
+    {
+        text: "<strong style='font-size:1.2em;'>Baixar o arquivo</strong><br><br>" +
+              "1. Localizar no canto inferior direito os botões \"Exportar para\"<br>" +
+              "   -> usar a barra de rolagem horizontal<br>" +
+              "2. Clicar no botão exportar txt:<br>" +
+			  "   -><img src='imagens/btntext.jpg' alt='Botão exportar txt' style='max-width:100%; border: none; margin:10px 0;'><br>" +
+              "3. Salvar o arquivo"
+    },
+    {
+        text: "<strong style='font-size:1.2em;'>Gerar ficha cadastro funcional</strong><br><br>" +
+              "1. Abrir a aplicação<br>" +
+              "   -> Link: <a href='https://brunomoraesdigital.github.io/ficha-cadastral/' target='_blank' style='color: #0066cc; text-decoration: underline;'>https://brunomoraesdigital.github.io/ficha-cadastral/</a><br><br>" +
+              "2. Carregar o arquivo<br>" +
+              "   -> botão que tem uma pasta<br><br>" +
+              "3. Clicar em Carregar Arquivo<br>" +
+              "4. Localizar o arquivo<br>" +
+              "5. Selecionar o arquivo<br>" +
+              "6. Clicar em Abrir<br><br>" +
+              "   -> O arquivo será carregado e os campos serão preenchidos automaticamente."
+    },
+    {
+        text: "<strong style='font-size:1.2em;'>Preenchimento manual (caso o arquivo não seja carregado)</strong><br><br>" +
+              "Na impossibilidade de carregar o arquivo, os campos podem ser preenchidos manualmente."
+    }
+];
+
+
+let currentTutorialStep = 0;
+
+// Função para trocar a imagem do Clippy aleatoriamente (reutiliza o array global imagensClippy)
+function trocarImagemTutorial() {
+    const imgElement = document.getElementById('tutorialImage');
+    if (imgElement && typeof imagensClippy !== 'undefined') {
+        const randomImg = imagensClippy[Math.floor(Math.random() * imagensClippy.length)];
+        imgElement.src = randomImg;
+    }
+}
+
+function abrirModalTutorial() {
+    document.getElementById('modalTutorialOverlay').style.display = 'flex';
+    currentTutorialStep = 0;
+    updateTutorialStep();
+    trocarImagemTutorial(); // imagem aleatória inicial do Clippy
+}
+
+function fecharModalTutorial() {
+    document.getElementById('modalTutorialOverlay').style.display = 'none';
+}
+
+
+function proximoPassoTutorial() {
+    if (currentTutorialStep < tutorialSteps.length - 1) {
+        currentTutorialStep++;
+        updateTutorialStep();
+        trocarImagemTutorial();
+    }
+}
+
+function anteriorPassoTutorial() {
+    if (currentTutorialStep > 0) {
+        currentTutorialStep--;
+        updateTutorialStep();
+        trocarImagemTutorial();
+    }
+}
+
+function primeiroPassoTutorial() {
+    currentTutorialStep = 0;
+    updateTutorialStep();
+    trocarImagemTutorial();
+}
+
+function atualizarBotoesTutorial() {
+    const btnAnterior = document.getElementById('btnTutorialAnterior');
+    const btnProximo = document.getElementById('btnTutorialProximo');
+    const btnInicio = document.getElementById('btnTutorialInicio');
+    
+    if (btnAnterior) {
+        btnAnterior.disabled = (currentTutorialStep === 0);
+    }
+    if (btnProximo) {
+        btnProximo.disabled = (currentTutorialStep === tutorialSteps.length - 1);
+    }
+    if (btnInicio) {
+        btnInicio.disabled = (currentTutorialStep === 0);
+    }
+}
+
+function updateTutorialStep() {
+    const step = tutorialSteps[currentTutorialStep];
+    document.getElementById('tutorialText').innerHTML = step.text; // era innerText
+    atualizarBotoesTutorial();
+}
+
+
+setInterval(trocarImagemTutorial, 10000);
+	
+
+    function mostrarNotificacao(mensagem) {
+        const notif = document.getElementById('notification');
+        notif.style.display = 'flex';
+        notif.innerText = mensagem;
+        setTimeout(() => {
+            notif.style.display = 'none';
+        }, 4000);
+    }
+
+    function converterDataBrParaInput(dataStr) {
+        if (!dataStr || dataStr.trim() === '') return '';
+        const limpo = dataStr.trim();
+        if (limpo.length === 8 && /^\d+$/.test(limpo)) {
+            const dia = limpo.substring(0,2);
+            const mes = limpo.substring(2,4);
+            const ano = limpo.substring(4,8);
+            return `${ano}-${mes}-${dia}`;
+        }
+        return '';
+    }
+
+    function normalizarEstadoCivil(valor) {
+        if (!valor) return '';
+        const str = valor.toUpperCase().trim();
+        const semPrefixo = str.replace(/^\d+\s*-\s*/, '');
+        if (semPrefixo.includes('SOLTEIRO')) return 'SOLTEIRO';
+        if (semPrefixo.includes('CASADO')) return 'CASADO';
+        if (semPrefixo.includes('DIVORCIADO')) return 'DIVORCIADO';
+        if (semPrefixo.includes('SEPARADO')) return 'SEPARADO JUDICIALMENTE';
+        if (semPrefixo.includes('VIÚVO') || semPrefixo.includes('VIUVO')) return 'VIÚVO';
+        if (semPrefixo.includes('UNIÃO') || semPrefixo.includes('UNIAO')) return 'UNIÃO ESTÁVEL';
+        return '';
+    }
+
+    function processarArquivo(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const conteudo = e.target.result;
+            const linhas = conteudo.split('\n').filter(l => l.trim() !== '');
+            if (linhas.length < 2) {
+                mostrarNotificacao('Arquivo inválido: precisa de cabeçalho e dados.');
+                return;
+            }
+            const dados = linhas[1].split('|').map(s => s.trim());
+            
+            if (dados.length < 47) {
+                mostrarNotificacao('Arquivo com formato inesperado (número de colunas).');
+                return;
+            }
+
+            const idx = {
+                NOME: 2,
+                CPF: 3,
+                MATRICULA: 4,
+                DENOMINACAO: 5,
+                CARGO: 6,
+                REF_VERTICAL: 7,
+                REF_HORIZONTAL: 8,
+                CARGA_HORARIA: 9,
+                CARGA_HORARIA_SEC: 10,
+                DATA_ADMISSAO: 11,
+                DATA_APOSENTADORIA: 12,
+                DATA_DESLIGAMENTO: 13,
+                LOTACAO: 14,
+                LOT_SECUNDARIA: 15,
+                NATURALIDADE: 16,
+                UF_NASC: 17,
+                SEXO: 19,
+                DATA_NASCIMENTO: 20,
+                ESTADO_CIVIL: 21,
+                NOME_MAE: 22,
+                NOME_PAI: 23,
+                TITULO_NUM: 24,
+                ZONA: 25,
+                SECAO: 26,
+                ENDERECO: 27,
+                COMPLEMENTO: 28,
+                BAIRRO: 29,
+                MUNICIPIO: 30,
+                UF_END: 31,
+                CEP: 32,
+                DDD: 33,
+                TELEFONE: 34,
+                DDD2: 35,
+                TELEFONE2: 36,
+                DDD_CEL: 37,
+                CELULAR: 38,
+                EMAIL: 39,
+                CONJUGE: 41,
+                READAPTADO: 45,
+				CARREIRA: 46
+            };
+
+            if (dados[idx.NOME]) document.getElementById('i-nome').value = dados[idx.NOME];
+            if (dados[idx.CPF]) document.getElementById('i-cpf').value = dados[idx.CPF];
+            if (dados[idx.MATRICULA]) document.getElementById('i-mat').value = dados[idx.MATRICULA];
+            if (dados[idx.DENOMINACAO]) document.getElementById('i-cargo').value = dados[idx.DENOMINACAO];
+            if (dados[idx.CARGO]) document.getElementById('i-cod').value = dados[idx.CARGO];
+            const vertical = dados[idx.REF_VERTICAL] || '';
+            const horizontal = dados[idx.REF_HORIZONTAL] || '';
+            if (vertical || horizontal) {
+                document.getElementById('i-etapa').value = (vertical + (vertical && horizontal ? '-' : '') + horizontal).trim();
+            }
+            const ch1 = parseInt(dados[idx.CARGA_HORARIA]) || 0;
+            const ch2 = parseInt(dados[idx.CARGA_HORARIA_SEC]) || 0;
+            const soma = ch1 + ch2;
+            const selectCH = document.getElementById('i-ch');
+            let opcaoSelecionada = false;
+            for (let opt of selectCH.options) {
+                if (opt.value === soma + 'H') {
+                    selectCH.value = opt.value;
+                    opcaoSelecionada = true;
+                    break;
+                }
+            }
+			if (dados[idx.CARREIRA]) document.getElementById('i-carreira').value = dados[idx.CARREIRA];
+            if (!opcaoSelecionada) selectCH.value = '';
+
+            if (dados[idx.DATA_ADMISSAO]) document.getElementById('i-adm').value = converterDataBrParaInput(dados[idx.DATA_ADMISSAO]);
+            
+            if (dados[idx.DATA_APOSENTADORIA] && dados[idx.DATA_APOSENTADORIA] !== '') {
+                document.getElementById('i-apo').value = converterDataBrParaInput(dados[idx.DATA_APOSENTADORIA]);
+                document.getElementById('chk-apo').checked = true;
+            } else {
+                document.getElementById('i-apo').value = '';
+                document.getElementById('chk-apo').checked = false;
+            }
+            
+            if (dados[idx.DATA_DESLIGAMENTO] && dados[idx.DATA_DESLIGAMENTO] !== '') {
+                document.getElementById('i-des').value = converterDataBrParaInput(dados[idx.DATA_DESLIGAMENTO]);
+                document.getElementById('chk-des').checked = true;
+            } else {
+                document.getElementById('i-des').value = '';
+                document.getElementById('chk-des').checked = false;
+            }
+
+            if (dados[idx.LOTACAO]) document.getElementById('i-lot1').value = dados[idx.LOTACAO];
+            if (dados[idx.LOT_SECUNDARIA]) document.getElementById('i-lot2').value = dados[idx.LOT_SECUNDARIA];
+            if (dados[idx.NATURALIDADE]) document.getElementById('i-nat').value = dados[idx.NATURALIDADE];
+            if (dados[idx.UF_NASC]) document.getElementById('i-uf-nat').value = dados[idx.UF_NASC];
+            if (dados[idx.SEXO]) {
+                const sexoVal = dados[idx.SEXO].trim();
+                if (sexoVal === '1') document.getElementById('i-sexo').value = 'M';
+                else if (sexoVal === '2') document.getElementById('i-sexo').value = 'F';
+                else document.getElementById('i-sexo').value = '';
+            }
+            if (dados[idx.DATA_NASCIMENTO]) document.getElementById('i-nasc').value = converterDataBrParaInput(dados[idx.DATA_NASCIMENTO]);
+            if (dados[idx.ESTADO_CIVIL]) {
+                const ec = normalizarEstadoCivil(dados[idx.ESTADO_CIVIL]);
+                if (ec) document.getElementById('i-ecivil').value = ec;
+            }
+            if (dados[idx.NOME_MAE]) document.getElementById('i-mae').value = dados[idx.NOME_MAE];
+            if (dados[idx.NOME_PAI]) document.getElementById('i-pai').value = dados[idx.NOME_PAI];
+            if (dados[idx.CONJUGE]) document.getElementById('i-conjuge').value = dados[idx.CONJUGE];
+            if (dados[idx.TITULO_NUM]) document.getElementById('i-t-num').value = dados[idx.TITULO_NUM];
+            if (dados[idx.ZONA]) document.getElementById('i-t-zona').value = dados[idx.ZONA];
+            if (dados[idx.SECAO]) document.getElementById('i-t-sec').value = dados[idx.SECAO];
+            if (dados[idx.ENDERECO]) document.getElementById('i-rua').value = dados[idx.ENDERECO];
+            if (dados[idx.COMPLEMENTO]) document.getElementById('i-comp').value = dados[idx.COMPLEMENTO];
+            if (dados[idx.BAIRRO]) document.getElementById('i-bairro').value = dados[idx.BAIRRO];
+            if (dados[idx.MUNICIPIO]) document.getElementById('i-cid').value = dados[idx.MUNICIPIO];
+            if (dados[idx.UF_END]) document.getElementById('i-uf-end').value = dados[idx.UF_END];
+            if (dados[idx.CEP]) document.getElementById('i-cep').value = dados[idx.CEP];
+            const ddd = dados[idx.DDD] || '';
+            const tel = dados[idx.TELEFONE] || '';
+            if (ddd && tel && tel !== '0') document.getElementById('i-tel').value = ddd + tel;
+            const dddCel = dados[idx.DDD_CEL] || '';
+            const cel = dados[idx.CELULAR] || '';
+            if (dddCel && cel && cel !== '0') document.getElementById('i-cel1').value = dddCel + cel;
+            const ddd2 = dados[idx.DDD2] || '';
+            const tel2 = dados[idx.TELEFONE2] || '';
+            if (ddd2 && tel2 && tel2 !== '0') document.getElementById('i-cel2').value = ddd2 + tel2;
+            if (dados[idx.EMAIL]) document.getElementById('i-mail').value = dados[idx.EMAIL].toLowerCase();
+
+            let readaptado = dados[idx.READAPTADO] ? dados[idx.READAPTADO].toUpperCase() : 'N';
+            if (readaptado === 'S' || readaptado === 'SIM') {
+                document.getElementById('v-readaptado').innerText = 'sim';
+            } else {
+                document.getElementById('v-readaptado').innerText = 'não';
+            }
+
+            onBlurCPF();
+            onBlurMat();
+            onBlurCEP();
+
+            atualizarFicha();
+            fecharModal();
+            mostrarNotificacao('Arquivo carregado com sucesso!');
+        };
+        reader.readAsText(file, 'UTF-8');
+    }
+
+    document.getElementById('btnCarregarModal').addEventListener('click', function() {
+        document.getElementById('fileInput').click();
+    });
+
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+            processarArquivo(e.target.files[0]);
+        }
+        e.target.value = '';
+    });
+
+    async function carregarFraseClippy() {
+        const fraseSpan = document.getElementById('frase-clippy');
+        fraseSpan.innerText = "Clippy diz: Pensando..."; 
+        try {
+            const res = await fetch('https://api.adviceslip.com/advice');
+            const data = await res.json();
+            const transRes = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(data.slip.advice)}&langpair=en|pt-BR`);
+            const transData = await transRes.json();
+            fraseSpan.innerText = "Clippy diz: " + transData.responseData.translatedText;
+        } catch (e) {
+            fraseSpan.innerText = "Clippy diz: Parece que você está trabalhando duro hoje!";
+        }
+    }
+
+    const imagensClippy = [
+        'imagens/clippy-01.gif', 'imagens/clippy-03.gif', 'imagens/clippy-04.gif', 'imagens/clippy-06.gif', 
+        'imagens/clippy-07.gif', 'imagens/clippy-08.gif', 'imagens/clippy-09.gif', 'imagens/clippy-10.gif', 
+        'imagens/clippy-11.gif', 'imagens/clippy-12.gif', 'imagens/clippy-13.gif', 'imagens/clippy-14.gif', 
+        'imagens/clippy-16.gif', 'imagens/clippy-17.gif'
+    ];
+
+    function trocarClippy() {
+        const imgElement = document.getElementById('clippy-img');
+        const randomImg = imagensClippy[Math.floor(Math.random() * imagensClippy.length)];
+        imgElement.src = randomImg;
+    }
+    setInterval(trocarClippy, 10000); 
+
+    function onInputCPF(e) {
+        const input = e.target;
+        const valorOriginal = input.value;
+        
+        let digitos = valorOriginal.replace(/\D/g, '');
+        
+        if (digitos.length > 11) {
+            digitos = digitos.slice(0, 11);
+        }
+        
+        input.value = digitos;
+        
+        const erroSpan = document.getElementById('erro-cpf');
+        if (/[^\d]/.test(valorOriginal)) {
+            erroSpan.innerText = 'apenas números permitidos';
+        } else if (valorOriginal.length > 11) {
+            erroSpan.innerText = 'apenas 11 números permitidos';
+        } else {
+            erroSpan.innerText = '';
+        }
+        
+        if (digitos.length === 11) {
+            input.value = formatarCPF(digitos);
+        }
+        
+        atualizarFicha();
+    }
+
+    function onBlurCPF() {
+        const input = document.getElementById('i-cpf');
+        const valor = input.value;
+        const digitos = valor.replace(/\D/g, '');
+        const erroSpan = document.getElementById('erro-cpf');
+        
+        if (digitos.length > 0) {
+            const completo = digitos.padStart(11, '0');
+            input.value = formatarCPF(completo);
+            erroSpan.innerText = '';
+        } else {
+            erroSpan.innerText = '';
+        }
+        atualizarFicha();
+    }
+
+    function onFocusCPF() {
+        const input = document.getElementById('i-cpf');
+        const digitos = input.value.replace(/\D/g, '');
+        input.value = digitos;
+    }
+
+    function formatarCPF(digitos) {
+        return `${digitos.slice(0,3)}.${digitos.slice(3,6)}.${digitos.slice(6,9)}-${digitos.slice(9)}`;
+    }
+
+    function onInputMat(e) {
+        const input = e.target;
+        const valorOriginal = input.value.toUpperCase();
+        
+        let base = '';
+        let xCount = 0;
+        for (let ch of valorOriginal) {
+            if (ch >= '0' && ch <= '9') {
+                base += ch;
+            } else if (ch === 'X') {
+                xCount++;
+                if (xCount === 1) {
+                    base += 'X';
+                }
+            } else if (ch !== '.' && ch !== '-') {
+            }
+        }
+        
+        if (base.length > 8) {
+            base = base.slice(0, 8);
+        }
+        
+        input.value = base;
+        
+        const erroSpan = document.getElementById('erro-mat');
+        
+        const invalido = [...valorOriginal].some(ch => !(ch >= '0' && ch <= '9') && ch !== 'X' && ch !== '.' && ch !== '-');
+        if (invalido) {
+            erroSpan.innerText = 'apenas números e x permitidos';
+        } else if (base.includes('X') && base.indexOf('X') !== base.length - 1) {
+            erroSpan.innerText = 'matricula fora do padrão';
+        } else if (valorOriginal.length > 8) {
+            erroSpan.innerText = 'apenas 8 caracteres permitidos';
+        } else {
+            erroSpan.innerText = '';
+        }
+        
+        if (base.length === 8) {
+            input.value = formatarMatricula(base);
+        }
+        
+        atualizarFicha();
+    }
+
+    function onBlurMat() {
+        const input = document.getElementById('i-mat');
+        const valor = input.value;
+        const base = valor.replace(/[^\dX]/g, ''); 
+        const erroSpan = document.getElementById('erro-mat');
+        
+        if (base.length === 0) {
+            erroSpan.innerText = '';
+            return;
+        }
+        
+        const temX = base.includes('X');
+        const posX = base.indexOf('X');
+        if (temX && (base.lastIndexOf('X') !== posX || posX !== base.length - 1)) {
+            erroSpan.innerText = 'matricula fora do padrão';
+            input.select();
+        } else if (base.length > 8) {
+            erroSpan.innerText = 'apenas 8 caracteres permitidos';
+            input.select();
+        } else {
+            input.value = formatarMatricula(base);
+            erroSpan.innerText = '';
+        }
+        atualizarFicha();
+    }
+
+    function onFocusMat() {
+        const input = document.getElementById('i-mat');
+        const base = input.value.replace(/[^\dX]/g, '');
+        input.value = base;
+    }
+
+    function formatarMatricula(base) {
+        let digitos = '';
+        let temX = false;
+        for (let ch of base) {
+            if (ch === 'X') {
+                temX = true;
+            } else {
+                digitos += ch;
+            }
+        }
+        if (temX) {
+            digitos = digitos.padStart(7, '0');
+            return `${digitos.slice(0,4)}.${digitos.slice(4,7)}-X`;
+        } else {
+            digitos = digitos.padStart(8, '0');
+            return `${digitos.slice(0,4)}.${digitos.slice(4,7)}-${digitos.slice(7)}`;
+        }
+    }
+
+    function onInputCEP(e) {
+        const input = e.target;
+        const valorOriginal = input.value;
+        
+        let digitos = valorOriginal.replace(/\D/g, '');
+        
+        if (digitos.length > 8) {
+            digitos = digitos.slice(0, 8);
+        }
+        
+        input.value = digitos;
+        
+        const erroSpan = document.getElementById('erro-cep');
+        if (/[^\d]/.test(valorOriginal)) {
+            erroSpan.innerText = 'apenas números permitidos';
+        } else if (valorOriginal.length > 8) {
+            erroSpan.innerText = 'apenas 8 números permitidos';
+        } else {
+            erroSpan.innerText = '';
+        }
+        
+        if (digitos.length === 8) {
+            input.value = formatarCEP(digitos);
+        }
+        
+        atualizarFicha();
+    }
+
+    function onBlurCEP() {
+        const input = document.getElementById('i-cep');
+        const valor = input.value;
+        const digitos = valor.replace(/\D/g, '');
+        const erroSpan = document.getElementById('erro-cep');
+        
+        if (digitos.length > 0) {
+            const completo = digitos.padStart(8, '0');
+            input.value = formatarCEP(completo);
+            erroSpan.innerText = '';
+        } else {
+            erroSpan.innerText = '';
+        }
+        atualizarFicha();
+    }
+
+    function onFocusCEP() {
+        const input = document.getElementById('i-cep');
+        const digitos = input.value.replace(/\D/g, '');
+        input.value = digitos;
+    }
+
+    function formatarCEP(digitos) {
+        return `${digitos.slice(0,2)}.${digitos.slice(2,5)}-${digitos.slice(5)}`;
+    }
+
+
+    window.onload = function() {
+        atualizarFicha();
+        document.getElementById('modalOverlay').style.display = 'none';
+        document.getElementById('modalInfoOverlay').style.display = 'none';
+		document.getElementById('modalTutorialOverlay').style.display = 'none';
+        document.getElementById('v-readaptado').innerText = 'não';
+
+        document.getElementById('ano-atual').textContent = new Date().getFullYear();
+
+        carregarFraseClippy();
+
+        onBlurCPF();
+        onBlurMat();
+        onBlurCEP();
+    };
