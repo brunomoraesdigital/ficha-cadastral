@@ -1,5 +1,3 @@
-# ficha-cadastral
-
 # 📋 Ficha Cadastral Funcional
 
 Bem-vindo ao **Ficha Cadastral Funcional** — uma aplicação web simples e direta para organizar informações cadastrais de servidores, colaboradores ou qualquer outro perfil que exija um registro completo e bem estruturado.
