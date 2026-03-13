@@ -1433,8 +1433,8 @@
             document.getElementById('v-mail').innerText = document.getElementById('i-mail').value.toLowerCase();
 
             let msg = '';
-            if (estadoCivil === 'CASADO' && conjugeVazio) {
-                msg = '* Casado sem cônjuge';
+            if ((estadoCivil === 'CASADO' || estadoCivil === 'UNIÃO ESTÁVEL') && conjugeVazio) {
+                msg = '* ' + estadoCivil + ' sem cônjuge';
             } else if (estadosSemConjuge.includes(estadoCivil) && !conjugeVazio) {
                 msg = '* ' + estadoCivil + ' com cônjuge';
             }
