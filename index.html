@@ -1777,6 +1777,69 @@
             };
             reader.readAsText(file, 'UTF-8');
         }
+		
+		// ============================================================
+        // NOVA FUNÇÃO: resetarFormulario()
+        // ============================================================
+        function resetarFormulario() {
+            // Inputs de texto e selects
+            document.getElementById('i-nome').value = '';
+            document.getElementById('i-cpf').value = '';
+            document.getElementById('i-mat').value = '';
+            document.getElementById('i-cargo').value = '';
+            document.getElementById('i-cod').value = '';
+            document.getElementById('i-etapa').value = '';
+            document.getElementById('i-carreira').value = '';
+            document.getElementById('i-vinculo').value = 'ESTATUTÁRIO';
+            document.getElementById('i-ch').value = '';
+            document.getElementById('i-adm').value = '';
+            document.getElementById('i-apo').value = '';
+            document.getElementById('i-des').value = '';
+            document.getElementById('i-lot1').value = '';
+            document.getElementById('i-lot2').value = '';
+            document.getElementById('i-nat').value = '';
+            document.getElementById('i-uf-nat').value = '';
+            document.getElementById('i-nacionalidade').value = 'BRASILEIRA';
+            document.getElementById('i-sexo').value = '';
+            document.getElementById('i-nasc').value = '';
+            document.getElementById('i-ecivil').value = '';
+            document.getElementById('i-mae').value = '';
+            document.getElementById('i-pai').value = '';
+            document.getElementById('i-conjuge').value = '';
+            document.getElementById('i-t-num').value = '';
+            document.getElementById('i-t-zona').value = '';
+            document.getElementById('i-t-sec').value = '';
+            document.getElementById('i-rua').value = '';
+            document.getElementById('i-comp').value = '';
+            document.getElementById('i-bairro').value = '';
+            document.getElementById('i-cid').value = '';
+            document.getElementById('i-uf-end').value = '';
+            document.getElementById('i-cep').value = '';
+            document.getElementById('i-tel').value = '';
+            document.getElementById('i-cel1').value = '';
+            document.getElementById('i-cel2').value = '';
+            document.getElementById('i-mail').value = '';
+
+            // Checkboxes (estado original)
+            document.getElementById('chk-apo').checked = true;
+            document.getElementById('chk-des').checked = true;
+            document.getElementById('chk-lot2').checked = false;
+
+            // Habilita os campos de data (caso tenham sido desabilitados)
+            document.getElementById('i-apo').disabled = false;
+            document.getElementById('i-des').disabled = false;
+
+            // Limpa mensagens de erro
+            document.getElementById('erro-cpf').innerText = '';
+            document.getElementById('erro-mat').innerText = '';
+            document.getElementById('erro-cep').innerText = '';
+
+            // Reseta o span de readaptado
+            document.getElementById('v-readaptado').innerText = 'não';
+
+            // Atualiza a ficha para refletir o estado limpo
+            atualizarFicha();
+        }
 
         document.getElementById('btnCarregarModal').addEventListener('click', function () {
             document.getElementById('fileInput').click();
@@ -1784,6 +1847,11 @@
 
         document.getElementById('fileInput').addEventListener('change', function (e) {
             if (e.target.files.length > 0) {
+                // ============================================================
+                // CHAMADA DA FUNÇÃO DE RESET ANTES DE PROCESSAR O NOVO ARQUIVO
+                // ============================================================
+                resetarFormulario();
+
                 processarArquivo(e.target.files[0]);
             }
             e.target.value = '';
@@ -2041,5 +2109,4 @@
 </body>
 
 </html>
-
 
