@@ -20,6 +20,8 @@ O layout é pensado para ser funcional e ao mesmo tempo familiar.
 Ah, e tem um detalhe especial: **o Clippy está de volta.**  
 Ele aparece sempre com uma frase inspiradora — só para lembrar que, mesmo no trabalho, um toque de leveza faz bem.
 
+![Versão](https://img.shields.io/badge/versão-1.4-blue)
+
 ---
 
 # ✨ Principais características
@@ -138,11 +140,7 @@ O código é **aberto** e pode ser estudado, adaptado ou melhorado.
 
 Projeto criado por **Bruno Moraes**.
 
-🔗 Aplicação online:  
-https://brunomoraesdigital.github.io/ficha-cadastral/
-
-🔗 GitHub:  
-https://github.com/brunomoraesdigital
+[![Portfólio](https://img.shields.io/badge/Portfólio-bmfolio.web.app-F77737?logo=google-chrome)](https://bmfolio.web.app/?utm_source=github&utm_medium=repo_portfolio) [![GitHub](https://img.shields.io/badge/GitHub-brunomoraesdigital-181717?logo=github)](https://github.com/brunomoraesdigital) 
 
 ---
 
@@ -168,8 +166,11 @@ Desde que:
 
 Veja o arquivo `LICENSE` para mais detalhes.
 
+![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL_3.0-blue.svg) 
 ---
 
 Seja para organizar um setor, testar um layout ou simplesmente matar a saudade do **Clippy**, espero que esta aplicação seja útil.
 
 **Bom cadastro! 📋**
+
+[![Portfólio](https://img.shields.io/badge/Portfólio-bmfolio.web.app-F77737?logo=google-chrome)](https://bmfolio.web.app/?utm_source=github&utm_medium=repo_portfolio) [![GitHub](https://img.shields.io/badge/GitHub-brunomoraesdigital-181717?logo=github)](https://github.com/brunomoraesdigital) ![Última atualização](https://img.shields.io/github/last-commit/brunomoraesdigital/ficha-cadastral) ![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL_3.0-blue.svg) ![Visitas](https://visitor-badge.laobi.icu/badge?page_id=brunomoraesdigital.ficha-cadastral) ![Versão](https://img.shields.io/badge/versão-1.4-blue)
