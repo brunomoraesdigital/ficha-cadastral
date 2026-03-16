@@ -896,8 +896,18 @@
                 </div>
             </div>
             <div class="linha">
-                <div class="campo"><label>Carreira</label><input type="text" id="i-carreira" oninput="atualizarFicha()">
+                <!--
+				<div class="campo"><label>Carreira</label><input type="text" id="i-carreira" oninput="atualizarFicha()">
                 </div>
+				-->
+				<div class="campo">
+					<label>Carreira</label>
+					<select id="i-carreira" onchange="atualizarFicha()">
+						<option value=""></option>
+						<option value="ASSISTÊNCIA A EDUCAÇÃO DO DF">ASSISTÊNCIA A EDUCAÇÃO DO DF</option>
+						<option value="MAGISTÉRIO PÚBLICO DO DF">MAGISTÉRIO PÚBLICO DO DF</option>
+					</select>
+				</div>
                 <div class="campo"><label>Vínculo</label><input type="text" id="i-vinculo" value="ESTATUTÁRIO"
                         onclick="this.value=''" onblur="if(this.value=='') this.value='ESTATUTÁRIO'"
                         oninput="atualizarFicha()"></div>
@@ -1321,7 +1331,13 @@
             document.getElementById('v-cargo').innerText = get('i-cargo');
             document.getElementById('v-cod').innerText = get('i-cod');
             document.getElementById('v-etapa').innerText = get('i-etapa');
-            document.getElementById('v-carreira').innerText = get('i-carreira');
+            //document.getElementById('v-carreira').innerText = get('i-carreira');
+			const carreira = get('i-carreira');
+			if (carreira) {
+				document.getElementById('v-carreira').innerText = carreira;
+			} else {
+				document.getElementById('v-carreira').innerText = '-----';
+			}
             document.getElementById('v-vinculo').innerText = get('i-vinculo') || 'ESTATUTÁRIO';
             document.getElementById('v-ch').innerText = get('i-ch');
 
@@ -1432,13 +1448,16 @@
             document.getElementById('v-cel2').innerText = document.getElementById('i-cel2').value || '-----';
             document.getElementById('v-mail').innerText = document.getElementById('i-mail').value.toLowerCase();
 
-            let msg = '';
-            if ((estadoCivil === 'CASADO' || estadoCivil === 'UNIÃO ESTÁVEL') && conjugeVazio) {
-                msg = '* ' + estadoCivil + ' sem cônjuge';
-            } else if (estadosSemConjuge.includes(estadoCivil) && !conjugeVazio) {
-                msg = '* ' + estadoCivil + ' com cônjuge';
-            }
-            document.getElementById('estado-civil-msg').innerText = msg;
+			let msg = '';
+			if (!carreira) {  // usa a variável carreira já definida acima
+				msg += '* Carreira não preenchida. ';
+			}
+			if ((estadoCivil === 'CASADO' || estadoCivil === 'UNIÃO ESTÁVEL') && conjugeVazio) {
+				msg += '* ' + estadoCivil + ' sem cônjuge';
+			} else if (estadosSemConjuge.includes(estadoCivil) && !conjugeVazio) {
+				msg += '* ' + estadoCivil + ' com cônjuge';
+			}
+			document.getElementById('estado-civil-msg').innerText = msg;
         }
 
         function abrirModal() {
@@ -1701,7 +1720,7 @@
                         break;
                     }
                 }
-                if (dados[idx.CARREIRA]) document.getElementById('i-carreira').value = dados[idx.CARREIRA];
+                //if (dados[idx.CARREIRA]) document.getElementById('i-carreira').value = dados[idx.CARREIRA];
                 if (!opcaoSelecionada) selectCH.value = '';
 
                 if (dados[idx.DATA_ADMISSAO]) document.getElementById('i-adm').value = converterDataBrParaInput(dados[idx.DATA_ADMISSAO]);
@@ -2109,4 +2128,3 @@
 </body>
 
 </html>
-
