@@ -1291,6 +1291,8 @@
             { login: "beltrano", senha: "Br@sil13" },
             { login: "ciclano", senha: "Br@sil13" }
         ];
+		
+		let arquivoCarregado = false;
 
         function fazerLogin() {
             const user = document.getElementById('loginUser').value.trim();
@@ -1449,7 +1451,7 @@
             document.getElementById('v-mail').innerText = document.getElementById('i-mail').value.toLowerCase();
 
 			let msg = '';
-			if (!carreira) {  // usa a variável carreira já definida acima
+			if (arquivoCarregado && !carreira) {
 				msg += '* Carreira não preenchida. ';
 			}
 			if ((estadoCivil === 'CASADO' || estadoCivil === 'UNIÃO ESTÁVEL') && conjugeVazio) {
@@ -1789,7 +1791,9 @@
                 onBlurCPF();
                 onBlurMat();
                 onBlurCEP();
-
+				
+				arquivoCarregado = true;
+				
                 atualizarFicha();
                 fecharModal();
                 mostrarNotificacao('Arquivo carregado com sucesso!');
@@ -1856,6 +1860,8 @@
             // Reseta o span de readaptado
             document.getElementById('v-readaptado').innerText = 'não';
 
+			arquivoCarregado = false;
+			
             // Atualiza a ficha para refletir o estado limpo
             atualizarFicha();
         }
