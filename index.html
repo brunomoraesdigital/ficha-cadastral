@@ -5,9 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro Funcional</title>
-	<!--
-	<link rel="stylesheet" href="estilo.css">
-	-->
     <style>
         * {
             box-sizing: border-box;
@@ -32,6 +29,46 @@
             overflow-y: auto;
             border-right: 2px solid #334155;
             height: 100%;
+            transition: max-width 0.3s ease, padding 0.3s ease;
+            position: relative;
+        }
+
+        .sidebar.collapsed {
+            max-width: 48px;
+            padding: 20px 0;
+            overflow-y: hidden;
+        }
+
+        .sidebar.collapsed .form-container,
+        .sidebar.collapsed .sidebar-h2 {
+            display: none;
+        }
+
+        .sidebar-toggle {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #0f172a;
+            border: 1px solid #38bdf8;
+            color: #38bdf8;
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: background 0.2s;
+        }
+
+        .sidebar-toggle:hover {
+            background: #334155;
+        }
+
+        .sidebar.collapsed .sidebar-toggle {
+            right: 8px;
         }
 
         .sidebar h2 {
@@ -854,243 +891,242 @@
         </div>
     </div>
 
-    <div class="sidebar">
-        <h2>ENTRADA DE DADOS</h2>
+    <div class="sidebar" id="sidebar">
+        <button class="sidebar-toggle" id="sidebarToggle">◀</button>
+        <div class="form-container" id="formContainer">
+            <h2 class="sidebar-h2">ENTRADA DE DADOS</h2>
 
-        <div class="bloco">
-            <div class="campo"><label>Nome Completo</label><input type="text" id="i-nome" oninput="atualizarFicha()">
-            </div>
-            <div class="linha">
-                <div class="campo">
-                    <div style="display: flex; align-items: center; gap: 5px; flex-wrap: wrap;">
-                        <label>CPF</label>
-                        <span class="erro-msg" id="erro-cpf"></span>
-                    </div>
-                    <input type="text" id="i-cpf" oninput="onInputCPF(event)" onblur="onBlurCPF()"
-                        onfocus="onFocusCPF()">
+            <div class="bloco">
+                <div class="campo"><label>Nome Completo</label><input type="text" id="i-nome" oninput="atualizarFicha()">
                 </div>
-                <div class="campo">
-                    <div style="display: flex; align-items: center; gap: 5px; flex-wrap: wrap;">
-                        <label>Matrícula</label>
-                        <span class="erro-msg" id="erro-mat"></span>
+                <div class="linha">
+                    <div class="campo">
+                        <div style="display: flex; align-items: center; gap: 5px; flex-wrap: wrap;">
+                            <label>CPF</label>
+                            <span class="erro-msg" id="erro-cpf"></span>
+                        </div>
+                        <input type="text" id="i-cpf" oninput="onInputCPF(event)" onblur="onBlurCPF()"
+                            onfocus="onFocusCPF()">
                     </div>
-                    <input type="text" id="i-mat" oninput="onInputMat(event)" onblur="onBlurMat()"
-                        onfocus="onFocusMat()">
+                    <div class="campo">
+                        <div style="display: flex; align-items: center; gap: 5px; flex-wrap: wrap;">
+                            <label>Matrícula</label>
+                            <span class="erro-msg" id="erro-mat"></span>
+                        </div>
+                        <input type="text" id="i-mat" oninput="onInputMat(event)" onblur="onBlurMat()"
+                            onfocus="onFocusMat()">
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="bloco">
-            <div class="campo"><label>Cargo / Especialidade</label><input type="text" id="i-cargo"
-                    oninput="atualizarFicha()"></div>
-            <div class="linha">
-                <div class="campo"><label>Código</label><input type="text" id="i-cod" oninput="atualizarFicha()"></div>
-                <div class="campo"><label>Etapa</label><input type="text" id="i-etapa" oninput="atualizarFicha()"></div>
-                <div class="campo"><label>CH</label>
-                    <select id="i-ch" onchange="atualizarFicha()">
-                        <option value=""></option>
-                        <option value="20H">20H</option>
-                        <option value="30H">30H</option>
-                        <option value="40H">40H</option>
-                    </select>
-                </div>
-            </div>
-            <div class="linha">
-                <!--
-				<div class="campo"><label>Carreira</label><input type="text" id="i-carreira" oninput="atualizarFicha()">
-                </div>
-				-->
-				<div class="campo">
-					<label>Carreira</label>
-					<select id="i-carreira" onchange="atualizarFicha()">
-						<option value=""></option>
-						<option value="ASSISTÊNCIA A EDUCAÇÃO DO DF">ASSISTÊNCIA A EDUCAÇÃO DO DF</option>
-						<option value="MAGISTÉRIO PÚBLICO DO DF">MAGISTÉRIO PÚBLICO DO DF</option>
-					</select>
-				</div>
-                <div class="campo"><label>Vínculo</label><input type="text" id="i-vinculo" value="ESTATUTÁRIO"
-                        onclick="this.value=''" onblur="if(this.value=='') this.value='ESTATUTÁRIO'"
+            <div class="bloco">
+                <div class="campo"><label>Cargo / Especialidade</label><input type="text" id="i-cargo"
                         oninput="atualizarFicha()"></div>
+                <div class="linha">
+                    <div class="campo"><label>Código</label><input type="text" id="i-cod" oninput="atualizarFicha()"></div>
+                    <div class="campo"><label>Etapa</label><input type="text" id="i-etapa" oninput="atualizarFicha()"></div>
+                    <div class="campo"><label>CH</label>
+                        <select id="i-ch" onchange="atualizarFicha()">
+                            <option value=""></option>
+                            <option value="20H">20H</option>
+                            <option value="30H">30H</option>
+                            <option value="40H">40H</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="linha">
+                    <div class="campo">
+                        <label>Carreira</label>
+                        <select id="i-carreira" onchange="atualizarFicha()">
+                            <option value=""></option>
+                            <option value="ASSISTÊNCIA A EDUCAÇÃO DO DF">ASSISTÊNCIA A EDUCAÇÃO DO DF</option>
+                            <option value="MAGISTÉRIO PÚBLICO DO DF">MAGISTÉRIO PÚBLICO DO DF</option>
+                        </select>
+                    </div>
+                    <div class="campo"><label>Vínculo</label><input type="text" id="i-vinculo" value="ESTATUTÁRIO"
+                            onclick="this.value=''" onblur="if(this.value=='') this.value='ESTATUTÁRIO'"
+                            oninput="atualizarFicha()"></div>
+                </div>
             </div>
-        </div>
 
-        <div class="bloco">
-            <div class="linha">
+            <div class="bloco">
+                <div class="linha">
+                    <div class="campo">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="chk-apo" checked onchange="atualizarFicha()">
+                            <label for="chk-apo">Aposentadoria</label>
+                        </div>
+                        <input type="date" id="i-apo" onchange="atualizarFicha()">
+                    </div>
+                    <div class="campo">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="chk-des" checked onchange="atualizarFicha()">
+                            <label for="chk-des">Desligamento</label>
+                        </div>
+                        <input type="date" id="i-des" onchange="atualizarFicha()">
+                    </div>
+                </div>
+                <div class="linha">
+                    <div class="campo"><label>Admissão</label><input type="date" id="i-adm" onchange="atualizarFicha()">
+                    </div>
+                </div>
+                <div class="campo"><label>Lotação 1</label><input type="text" id="i-lot1" oninput="atualizarFicha()"></div>
                 <div class="campo">
                     <div class="checkbox-group">
-                        <input type="checkbox" id="chk-apo" checked onchange="atualizarFicha()">
-                        <label for="chk-apo">Aposentadoria</label>
+                        <input type="checkbox" id="chk-lot2" onchange="atualizarFicha()">
+                        <label for="chk-lot2">Lotação 2</label>
                     </div>
-                    <input type="date" id="i-apo" onchange="atualizarFicha()">
-                </div>
-                <div class="campo">
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="chk-des" checked onchange="atualizarFicha()">
-                        <label for="chk-des">Desligamento</label>
-                    </div>
-                    <input type="date" id="i-des" onchange="atualizarFicha()">
+                    <input type="text" id="i-lot2" oninput="atualizarFicha()">
                 </div>
             </div>
-            <div class="linha">
-                <div class="campo"><label>Admissão</label><input type="date" id="i-adm" onchange="atualizarFicha()">
-                </div>
-            </div>
-            <div class="campo"><label>Lotação 1</label><input type="text" id="i-lot1" oninput="atualizarFicha()"></div>
-            <div class="campo">
-                <div class="checkbox-group">
-                    <input type="checkbox" id="chk-lot2" onchange="atualizarFicha()">
-                    <label for="chk-lot2">Lotação 2</label>
-                </div>
-                <input type="text" id="i-lot2" oninput="atualizarFicha()">
-            </div>
-        </div>
 
-        <div class="bloco">
-            <div class="linha">
-                <div class="campo"><label>Naturalidade</label><input type="text" id="i-nat" oninput="atualizarFicha()">
+            <div class="bloco">
+                <div class="linha">
+                    <div class="campo"><label>Naturalidade</label><input type="text" id="i-nat" oninput="atualizarFicha()">
+                    </div>
+                    <div class="campo" style="flex:0 0 60px"><label>UF</label>
+                        <select id="i-uf-nat" onchange="atualizarFicha()">
+                            <option value=""></option>
+                            <option value="AC">AC</option>
+                            <option value="AL">AL</option>
+                            <option value="AP">AP</option>
+                            <option value="AM">AM</option>
+                            <option value="BA">BA</option>
+                            <option value="CE">CE</option>
+                            <option value="DF">DF</option>
+                            <option value="ES">ES</option>
+                            <option value="GO">GO</option>
+                            <option value="MA">MA</option>
+                            <option value="MT">MT</option>
+                            <option value="MS">MS</option>
+                            <option value="MG">MG</option>
+                            <option value="PA">PA</option>
+                            <option value="PB">PB</option>
+                            <option value="PR">PR</option>
+                            <option value="PE">PE</option>
+                            <option value="PI">PI</option>
+                            <option value="RJ">RJ</option>
+                            <option value="RN">RN</option>
+                            <option value="RS">RS</option>
+                            <option value="RO">RO</option>
+                            <option value="RR">RR</option>
+                            <option value="SC">SC</option>
+                            <option value="SP">SP</option>
+                            <option value="SE">SE</option>
+                            <option value="TO">TO</option>
+                        </select>
+                    </div>
+                    <div class="campo"><label>Nacionalidade</label><input type="text" id="i-nacionalidade"
+                            value="BRASILEIRA" onclick="this.value=''" onblur="if(this.value=='') this.value='BRASILEIRA'"
+                            oninput="atualizarFicha()"></div>
                 </div>
-                <div class="campo" style="flex:0 0 60px"><label>UF</label>
-                    <select id="i-uf-nat" onchange="atualizarFicha()">
-                        <option value=""></option>
-                        <option value="AC">AC</option>
-                        <option value="AL">AL</option>
-                        <option value="AP">AP</option>
-                        <option value="AM">AM</option>
-                        <option value="BA">BA</option>
-                        <option value="CE">CE</option>
-                        <option value="DF">DF</option>
-                        <option value="ES">ES</option>
-                        <option value="GO">GO</option>
-                        <option value="MA">MA</option>
-                        <option value="MT">MT</option>
-                        <option value="MS">MS</option>
-                        <option value="MG">MG</option>
-                        <option value="PA">PA</option>
-                        <option value="PB">PB</option>
-                        <option value="PR">PR</option>
-                        <option value="PE">PE</option>
-                        <option value="PI">PI</option>
-                        <option value="RJ">RJ</option>
-                        <option value="RN">RN</option>
-                        <option value="RS">RS</option>
-                        <option value="RO">RO</option>
-                        <option value="RR">RR</option>
-                        <option value="SC">SC</option>
-                        <option value="SP">SP</option>
-                        <option value="SE">SE</option>
-                        <option value="TO">TO</option>
-                    </select>
+                <div class="linha">
+                    <div class="campo" style="flex:0 0 60px"><label>Sexo</label>
+                        <select id="i-sexo" onchange="atualizarFicha()">
+                            <option value=""></option>
+                            <option value="M">M</option>
+                            <option value="F">F</option>
+                        </select>
+                    </div>
+                    <div class="campo"><label>Nascimento</label><input type="date" id="i-nasc" onchange="atualizarFicha()">
+                    </div>
+                    <div class="campo"><label>Estado Civil</label>
+                        <select id="i-ecivil" onchange="atualizarFicha()">
+                            <option value=""></option>
+                            <option value="SOLTEIRO">SOLTEIRO</option>
+                            <option value="CASADO">CASADO</option>
+                            <option value="DIVORCIADO">DIVORCIADO</option>
+                            <option value="SEPARADO JUDICIALMENTE">SEPARADO JUDICIALMENTE</option>
+                            <option value="VIÚVO">VIÚVO</option>
+                            <option value="UNIÃO ESTÁVEL">UNIÃO ESTÁVEL</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="campo"><label>Nacionalidade</label><input type="text" id="i-nacionalidade"
-                        value="BRASILEIRA" onclick="this.value=''" onblur="if(this.value=='') this.value='BRASILEIRA'"
+            </div>
+
+            <div class="bloco">
+                <div class="campo"><label>Nome da Mãe</label><input type="text" id="i-mae" oninput="atualizarFicha()"></div>
+                <div class="campo"><label>Nome do Pai</label><input type="text" id="i-pai" oninput="atualizarFicha()"></div>
+                <div class="campo"><label>Nome do Cônjuge</label><input type="text" id="i-conjuge"
                         oninput="atualizarFicha()"></div>
             </div>
-            <div class="linha">
-                <div class="campo" style="flex:0 0 60px"><label>Sexo</label>
-                    <select id="i-sexo" onchange="atualizarFicha()">
-                        <option value=""></option>
-                        <option value="M">M</option>
-                        <option value="F">F</option>
-                    </select>
-                </div>
-                <div class="campo"><label>Nascimento</label><input type="date" id="i-nasc" onchange="atualizarFicha()">
-                </div>
-                <div class="campo"><label>Estado Civil</label>
-                    <select id="i-ecivil" onchange="atualizarFicha()">
-                        <option value=""></option>
-                        <option value="SOLTEIRO">SOLTEIRO</option>
-                        <option value="CASADO">CASADO</option>
-                        <option value="DIVORCIADO">DIVORCIADO</option>
-                        <option value="SEPARADO JUDICIALMENTE">SEPARADO JUDICIALMENTE</option>
-                        <option value="VIÚVO">VIÚVO</option>
-                        <option value="UNIÃO ESTÁVEL">UNIÃO ESTÁVEL</option>
-                    </select>
-                </div>
-            </div>
-        </div>
 
-        <div class="bloco">
-            <div class="campo"><label>Nome da Mãe</label><input type="text" id="i-mae" oninput="atualizarFicha()"></div>
-            <div class="campo"><label>Nome do Pai</label><input type="text" id="i-pai" oninput="atualizarFicha()"></div>
-            <div class="campo"><label>Nome do Cônjuge</label><input type="text" id="i-conjuge"
-                    oninput="atualizarFicha()"></div>
-        </div>
-
-        <div class="bloco">
-            <label style="font-size:10px; color:#38bdf8;">TÍTULO DE ELEITOR</label>
-            <div class="linha">
-                <div class="campo"><label>Número</label><input type="text" id="i-t-num" oninput="atualizarFicha()">
-                </div>
-                <div class="campo"><label>Zona</label><input type="text" id="i-t-zona" oninput="atualizarFicha()"></div>
-                <div class="campo"><label>Seção</label><input type="text" id="i-t-sec" oninput="atualizarFicha()"></div>
-            </div>
-        </div>
-
-        <div class="bloco">
-            <div class="campo"><label>Logradouro / Nº</label><input type="text" id="i-rua" oninput="atualizarFicha()">
-            </div>
-            <div class="campo"><label>Complemento</label><input type="text" id="i-comp" oninput="atualizarFicha()">
-            </div>
-            <div class="linha">
-                <div class="campo"><label>Bairro</label><input type="text" id="i-bairro" oninput="atualizarFicha()">
-                </div>
-                <div class="campo"><label>Cidade</label><input type="text" id="i-cid" oninput="atualizarFicha()"></div>
-            </div>
-            <div class="linha">
-                <div class="campo" style="flex:0 0 60px"><label>UF</label>
-                    <select id="i-uf-end" onchange="atualizarFicha()">
-                        <option value=""></option>
-                        <option value="AC">AC</option>
-                        <option value="AL">AL</option>
-                        <option value="AP">AP</option>
-                        <option value="AM">AM</option>
-                        <option value="BA">BA</option>
-                        <option value="CE">CE</option>
-                        <option value="DF">DF</option>
-                        <option value="ES">ES</option>
-                        <option value="GO">GO</option>
-                        <option value="MA">MA</option>
-                        <option value="MT">MT</option>
-                        <option value="MS">MS</option>
-                        <option value="MG">MG</option>
-                        <option value="PA">PA</option>
-                        <option value="PB">PB</option>
-                        <option value="PR">PR</option>
-                        <option value="PE">PE</option>
-                        <option value="PI">PI</option>
-                        <option value="RJ">RJ</option>
-                        <option value="RN">RN</option>
-                        <option value="RS">RS</option>
-                        <option value="RO">RO</option>
-                        <option value="RR">RR</option>
-                        <option value="SC">SC</option>
-                        <option value="SP">SP</option>
-                        <option value="SE">SE</option>
-                        <option value="TO">TO</option>
-                    </select>
-                </div>
-                <div class="campo">
-                    <div style="display: flex; align-items: center; gap: 5px; flex-wrap: wrap;">
-                        <label>CEP</label>
-                        <span class="erro-msg" id="erro-cep"></span>
+            <div class="bloco">
+                <label style="font-size:10px; color:#38bdf8;">TÍTULO DE ELEITOR</label>
+                <div class="linha">
+                    <div class="campo"><label>Número</label><input type="text" id="i-t-num" oninput="atualizarFicha()">
                     </div>
-                    <input type="text" id="i-cep" oninput="onInputCEP(event)" onblur="onBlurCEP()"
-                        onfocus="onFocusCEP()">
+                    <div class="campo"><label>Zona</label><input type="text" id="i-t-zona" oninput="atualizarFicha()"></div>
+                    <div class="campo"><label>Seção</label><input type="text" id="i-t-sec" oninput="atualizarFicha()"></div>
                 </div>
             </div>
-        </div>
 
-        <div class="bloco">
-            <div class="linha">
-                <div class="campo"><label>Telefone</label><input type="text" id="i-tel" oninput="atualizarFicha()">
+            <div class="bloco">
+                <div class="campo"><label>Logradouro / Nº</label><input type="text" id="i-rua" oninput="atualizarFicha()">
                 </div>
-                <div class="campo"><label>Celular 1</label><input type="text" id="i-cel1" oninput="atualizarFicha()">
+                <div class="campo"><label>Complemento</label><input type="text" id="i-comp" oninput="atualizarFicha()">
                 </div>
-                <div class="campo"><label>Celular 2</label><input type="text" id="i-cel2" oninput="atualizarFicha()">
+                <div class="linha">
+                    <div class="campo"><label>Bairro</label><input type="text" id="i-bairro" oninput="atualizarFicha()">
+                    </div>
+                    <div class="campo"><label>Cidade</label><input type="text" id="i-cid" oninput="atualizarFicha()"></div>
+                </div>
+                <div class="linha">
+                    <div class="campo" style="flex:0 0 60px"><label>UF</label>
+                        <select id="i-uf-end" onchange="atualizarFicha()">
+                            <option value=""></option>
+                            <option value="AC">AC</option>
+                            <option value="AL">AL</option>
+                            <option value="AP">AP</option>
+                            <option value="AM">AM</option>
+                            <option value="BA">BA</option>
+                            <option value="CE">CE</option>
+                            <option value="DF">DF</option>
+                            <option value="ES">ES</option>
+                            <option value="GO">GO</option>
+                            <option value="MA">MA</option>
+                            <option value="MT">MT</option>
+                            <option value="MS">MS</option>
+                            <option value="MG">MG</option>
+                            <option value="PA">PA</option>
+                            <option value="PB">PB</option>
+                            <option value="PR">PR</option>
+                            <option value="PE">PE</option>
+                            <option value="PI">PI</option>
+                            <option value="RJ">RJ</option>
+                            <option value="RN">RN</option>
+                            <option value="RS">RS</option>
+                            <option value="RO">RO</option>
+                            <option value="RR">RR</option>
+                            <option value="SC">SC</option>
+                            <option value="SP">SP</option>
+                            <option value="SE">SE</option>
+                            <option value="TO">TO</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <div style="display: flex; align-items: center; gap: 5px; flex-wrap: wrap;">
+                            <label>CEP</label>
+                            <span class="erro-msg" id="erro-cep"></span>
+                        </div>
+                        <input type="text" id="i-cep" oninput="onInputCEP(event)" onblur="onBlurCEP()"
+                            onfocus="onFocusCEP()">
+                    </div>
                 </div>
             </div>
-            <div class="campo"><label>E-mail</label><input type="text" id="i-mail"
-                    oninput="this.value=this.value.toLowerCase(); atualizarFicha()"></div>
+
+            <div class="bloco">
+                <div class="linha">
+                    <div class="campo"><label>Telefone</label><input type="text" id="i-tel" oninput="atualizarFicha()">
+                    </div>
+                    <div class="campo"><label>Celular 1</label><input type="text" id="i-cel1" oninput="atualizarFicha()">
+                    </div>
+                    <div class="campo"><label>Celular 2</label><input type="text" id="i-cel2" oninput="atualizarFicha()">
+                    </div>
+                </div>
+                <div class="campo"><label>E-mail</label><input type="text" id="i-mail"
+                        oninput="this.value=this.value.toLowerCase(); atualizarFicha()"></div>
+            </div>
         </div>
     </div>
 
@@ -1243,7 +1279,6 @@
         </div>
     </div>
 
-    <!-- -->
     <div class="modal-overlay" id="modalTutorialOverlay" onclick="if(event.target===this) fecharModalTutorial()">
         <div class="modal-winxp modal-tutorial">
             <div class="modal-title">
@@ -1254,7 +1289,6 @@
                     <button onclick="fecharModalTutorial()">✕</button>
                 </div>
             </div>
-            <!-- -->
             <div class="modal-content tutorial-content">
                 <div class="tutorial-left-col">
                     <div class="clippy-box">
@@ -1273,17 +1307,13 @@
                     </div>
                 </div>
             </div>
-            <!-- -->
         </div>
     </div>
-    <!-- -->
 
     <input type="file" id="fileInput" accept=".txt" style="display: none;">
 
     <div class="notification" id="notification"></div>
-	<!--
-	<script src="script.js"></script>
-	-->
+
     <script>
         const usuarios = [
             { login: "gecaf2026", senha: "Br@sil13" },
@@ -1333,7 +1363,6 @@
             document.getElementById('v-cargo').innerText = get('i-cargo');
             document.getElementById('v-cod').innerText = get('i-cod');
             document.getElementById('v-etapa').innerText = get('i-etapa');
-            //document.getElementById('v-carreira').innerText = get('i-carreira');
 			const carreira = get('i-carreira');
 			if (carreira) {
 				document.getElementById('v-carreira').innerText = carreira;
@@ -1443,7 +1472,6 @@
                 endString += (endString ? ' ' : '') + 'CEP ' + cepVal;
             }
             document.getElementById('v-endereco').innerText = endString;
-            // ==========================================================
 
             document.getElementById('v-tel').innerText = document.getElementById('i-tel').value || '-----';
             document.getElementById('v-cel1').innerText = document.getElementById('i-cel1').value || '-----';
@@ -1513,8 +1541,6 @@
                     "   -> usar a barra de rolagem horizontal<br>" +
                     "2. Clicar no botão exportar txt:<br>" +
                     "   -><img src='imagens/btntext.jpg' alt='Botão exportar txt' style='max-width:100%; border: none; margin:10px 0;'><br>" +
-					//"<!-- imagem incorporada em Base64 para permitir distribuição em arquivo único -->
-				    //   	  -><img src=\"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAlgCWAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCAATABMDASIAAhEBAxEB/8QAFwABAQEBAAAAAAAAAAAAAAAAAAgGBf/EACoQAAEDAwQAAwkAAAAAAAAAAAECAwQABREGBxIhFSIxE0FRYXGRsbLC/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/ALxlx7a9qXVC5kGHJe8TKQ5IZ5K4iLGwMhCuuz1161xkXORpfWi5drseYkqM22h22pbbCXEuLyFpVwJBBT7j9eqxO6dgbn7syLj4WbgIlydL3AKyQITBbHShnznI+fr1WC0toS6yYNpavtpfly495adcfddcdAiKaADWSoEhvilB674hWTyNBbWmL4jUunrfdW2lMomMJeDayCU5GcHFK4+1Bzttpw/GE3+KUE97tain2LcrUDUJ1DSFvodUFNIWeXsWxnKgSOkj7VlG9wL60fJLbR3nyxmh/NKUFY7VpCNuNOJAwBBa/WlKUH//2Q==\" alt=\"Botão exportar txt\" style=\"max-width:100%; border:none; margin:10px 0;\"><br>" +
                     "3. Salvar o arquivo"
             },
             {
@@ -1538,7 +1564,6 @@
 
         let currentTutorialStep = 0;
 
-        // Função para trocar a imagem do Clippy aleatoriamente (reutiliza o array global imagensClippy)
         function trocarImagemTutorial() {
             const imgElement = document.getElementById('tutorialImage');
             if (imgElement && typeof imagensClippy !== 'undefined') {
@@ -1551,7 +1576,7 @@
             document.getElementById('modalTutorialOverlay').style.display = 'flex';
             currentTutorialStep = 0;
             updateTutorialStep();
-            trocarImagemTutorial(); // imagem aleatória inicial do Clippy
+            trocarImagemTutorial();
         }
 
         function fecharModalTutorial() {
@@ -1599,7 +1624,7 @@
 
         function updateTutorialStep() {
             const step = tutorialSteps[currentTutorialStep];
-            document.getElementById('tutorialText').innerHTML = step.text; // era innerText
+            document.getElementById('tutorialText').innerHTML = step.text;
             atualizarBotoesTutorial();
         }
 
@@ -1722,7 +1747,6 @@
                         break;
                     }
                 }
-                //if (dados[idx.CARREIRA]) document.getElementById('i-carreira').value = dados[idx.CARREIRA];
                 if (!opcaoSelecionada) selectCH.value = '';
 
                 if (dados[idx.DATA_ADMISSAO]) document.getElementById('i-adm').value = converterDataBrParaInput(dados[idx.DATA_ADMISSAO]);
@@ -1801,11 +1825,7 @@
             reader.readAsText(file, 'UTF-8');
         }
 		
-		// ============================================================
-        // NOVA FUNÇÃO: resetarFormulario()
-        // ============================================================
         function resetarFormulario() {
-            // Inputs de texto e selects
             document.getElementById('i-nome').value = '';
             document.getElementById('i-cpf').value = '';
             document.getElementById('i-mat').value = '';
@@ -1843,26 +1863,21 @@
             document.getElementById('i-cel2').value = '';
             document.getElementById('i-mail').value = '';
 
-            // Checkboxes (estado original)
             document.getElementById('chk-apo').checked = true;
             document.getElementById('chk-des').checked = true;
             document.getElementById('chk-lot2').checked = false;
 
-            // Habilita os campos de data (caso tenham sido desabilitados)
             document.getElementById('i-apo').disabled = false;
             document.getElementById('i-des').disabled = false;
 
-            // Limpa mensagens de erro
             document.getElementById('erro-cpf').innerText = '';
             document.getElementById('erro-mat').innerText = '';
             document.getElementById('erro-cep').innerText = '';
 
-            // Reseta o span de readaptado
             document.getElementById('v-readaptado').innerText = 'não';
 
 			arquivoCarregado = false;
 			
-            // Atualiza a ficha para refletir o estado limpo
             atualizarFicha();
         }
 
@@ -1872,11 +1887,7 @@
 
         document.getElementById('fileInput').addEventListener('change', function (e) {
             if (e.target.files.length > 0) {
-                // ============================================================
-                // CHAMADA DA FUNÇÃO DE RESET ANTES DE PROCESSAR O NOVO ARQUIVO
-                // ============================================================
                 resetarFormulario();
-
                 processarArquivo(e.target.files[0]);
             }
             e.target.value = '';
@@ -2113,6 +2124,18 @@
             return `${digitos.slice(0, 2)}.${digitos.slice(2, 5)}-${digitos.slice(5)}`;
         }
 
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const toggleBtn = document.getElementById('sidebarToggle');
+            
+            if (sidebar.classList.contains('collapsed')) {
+                sidebar.classList.remove('collapsed');
+                toggleBtn.innerHTML = '◀';
+            } else {
+                sidebar.classList.add('collapsed');
+                toggleBtn.innerHTML = '▶';
+            }
+        }
 
         window.onload = function () {
             atualizarFicha();
@@ -2128,6 +2151,8 @@
             onBlurCPF();
             onBlurMat();
             onBlurCEP();
+
+            document.getElementById('sidebarToggle').addEventListener('click', toggleSidebar);
         };
     </script>
 
