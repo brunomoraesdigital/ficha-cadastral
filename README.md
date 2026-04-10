@@ -87,7 +87,7 @@ A ficha reage a cada digitação.
 
 ### ⚡ Automática
 Clique no botão de pasta, selecione um arquivo `.txt` com os dados no formato correto e pronto — tudo preenchido em segundos.
-
+> o arquivo deve ter seus dados organizados da seguinte forma: ``` dado 1 | dado 2 | dado 3 | dado 4 | dado 5 | dado 6 |...```
 ---
 
 # 📑 Informações exibidas na ficha
@@ -131,8 +131,8 @@ O sistema inclui:
 
 - painel lateral com todos os campos de entrada
 - área de visualização com a ficha completa
-- botões flutuantes para ações específicas (carregar arquivo, tutorial, informações)
-- barra de status com o Clippy e links
+- botões flutuantes para ações específicas (carregar arquivo, tutorial, informações, ... )
+- barra de status com o Clippy (em algum lugar da aplicação é possivel interagir com ele)
 - janelas modais no estilo clássico do Windows
 
 ---
@@ -147,7 +147,7 @@ O projeto foi construído com:
 
 Sem frameworks pesados ou dependências externas.
 
-O código é **aberto** e pode ser estudado, adaptado ou melhorado.
+O código é **aberto** e pode ser estudado, adaptado ou melhorado, mas requer mantenha os créditos, preservar o aviso de copyright, manter a mesma licença e publicar o código-fonte caso use o software em um serviço online.
 
 ---
 
@@ -189,3 +189,18 @@ Seja para organizar um setor, testar um layout ou simplesmente matar a saudade d
 **Bom cadastro! 📋**
 
 [![Portfólio](https://img.shields.io/badge/Portfólio-bmfolio.web.app-F77737?logo=google-chrome)](https://bmfolio.web.app/?utm_source=github&utm_medium=repo_portfolio) [![GitHub](https://img.shields.io/badge/GitHub-brunomoraesdigital-181717?logo=github)](https://github.com/brunomoraesdigital) ![Última atualização](https://img.shields.io/github/last-commit/brunomoraesdigital/ficha-cadastral) ![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL_3.0-blue.svg) ![Visitas](https://visitor-badge.laobi.icu/badge?page_id=brunomoraesdigital.ficha-cadastral) ![Versão](https://img.shields.io/badge/versão-1.4-blue)
+
+## 🤝 Se você gosta do meu conteúdo, considere apoiar o que eu faço. Obrigado.
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/O4O31CFDL8)
+
+## ✨ Volte Sempre!
+### Obrigado pela visita! 😊
+
+<img src="https://raw.githubusercontent.com/brunomoraesdigital/ressources/main/legend.jpg">
+
+<div align="center">
+  <br>
+  <i>"Vivendo no presente, construindo o futuro"</i>
+</div>
+
