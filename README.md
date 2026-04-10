@@ -26,7 +26,14 @@ O layout é pensado para ser funcional e ao mesmo tempo familiar.
 Ah, e tem um detalhe especial: **o Clippy está de volta.**  
 Ele aparece sempre com uma frase inspiradora — só para lembrar que, mesmo no trabalho, um toque de leveza faz bem.
 
-![Versão](https://img.shields.io/badge/versão-1.4-blue)
+![Versão](https://img.shields.io/badge/versão-1.8-blue)
+- Checkbox Lotação 1 (marcado por padrão)
+- Lotação 2 ativa Lotação 1 automaticamente
+- Aposentado e/ou desligado: lotações desmarcadas e preview "-----"
+- Login removido (com comentário)
+- Mensagens de aviso com fundo amarelo
+- Botão "📸 COPIAR COMO IMAGEM" (copia o elemento ficha-grid)
+- Impressão com fonte menor e quebra de palavras
 
 ---
 
