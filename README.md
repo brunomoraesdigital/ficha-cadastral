@@ -27,6 +27,8 @@ Ah, e tem um detalhe especial: **o Clippy está de volta.**
 Ele aparece sempre com uma frase inspiradora — só para lembrar que, mesmo no trabalho, um toque de leveza faz bem.
 
 ![Versão](https://img.shields.io/badge/versão-1.8-blue)
+
+### O que foi atualizado na versão 1.8
 - Checkbox Lotação 1 (marcado por padrão)
 - Lotação 2 ativa Lotação 1 automaticamente
 - Aposentado e/ou desligado: lotações desmarcadas e preview "-----"
