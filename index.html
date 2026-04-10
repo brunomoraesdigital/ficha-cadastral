@@ -245,7 +245,7 @@
         }
 
         .lotacao-item {
-            font-size: 10px;
+            font-size: 12px;
             font-weight: normal;
             white-space: nowrap;
             overflow: hidden;
@@ -414,22 +414,95 @@
             .floating-btn-info,
             .modal-overlay,
             .notification,
-            .status-bar {
+            .status-bar,
+            #btn-copiar-imagem {
                 display: none !important;
             }
 
             body {
                 background: white;
+                margin: 0;
+                padding: 0;
             }
 
             .preview {
                 background: white;
+                padding: 0;
+                margin: 0;
+                display: block;
             }
 
             .ficha {
                 width: 100%;
-                padding: 5mm;
+                padding: 2mm;
+                margin: 0;
                 transform: none;
+                box-sizing: border-box;
+            }
+
+            .ficha-grid {
+                border: 1px solid black;
+                width: 100%;
+                page-break-inside: avoid;
+            }
+
+            .linha-ficha {
+                display: flex;
+                flex-wrap: wrap;
+                border-bottom: 1px solid black;
+            }
+
+            .celula {
+                border-right: 1px solid black;
+                padding: 2px 4px;
+                flex: 1 1 auto;
+                min-height: 30px;
+                word-break: break-word;
+                white-space: normal;
+                overflow: visible;
+            }
+
+            .lbl {
+                font-size: 8px;
+                font-weight: bold;
+                margin-bottom: 1px;
+            }
+
+            .val {
+                font-size: 9px;
+                font-weight: normal;
+                white-space: normal;
+                word-break: break-word;
+                overflow: visible;
+                text-overflow: clip;
+            }
+
+            .lotacao-container {
+                gap: 1px;
+            }
+
+            .lotacao-item {
+                font-size: 8px;
+                white-space: normal;
+                word-break: break-word;
+                overflow: visible;
+            }
+
+            /* Ajuste de larguras relativas para impressão */
+            .w-40, .w-30, .w-20, .w-15, .w-10, .w-5, .w-50, .w-55, .w-60, .w-80, .w-100 {
+                flex: 1 1 auto;
+            }
+
+            /* Garantir que células com conteúdo longo não quebrem o layout */
+            .celula .val {
+                line-height: 1.2;
+            }
+
+            .aviso-msg {
+                border: 1px solid #ffc107;
+                background-color: #fff3cd;
+                padding: 2px 4px;
+                font-size: 9px;
             }
         }
 
@@ -741,7 +814,20 @@
             font-size: 18px;
         }
 
-        .login-overlay {
+        .aviso-msg {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 6px 10px;
+            margin-top: 8px;
+            font-size: 12px;
+            color: #856404;
+            border-radius: 4px;
+            display: inline-block;
+            width: auto;
+            font-weight: normal;
+        }
+
+        /*        .login-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -754,7 +840,7 @@
             z-index: 10000;
             backdrop-filter: blur(5px);
         }
-
+*/
         .login-card {
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
@@ -838,14 +924,14 @@
             transform: translateY(0);
         }
 
-        .login-error {
+        /*        .login-error {
             color: #e74c3c;
             margin-top: 15px;
             font-size: 14px;
             min-height: 20px;
         }
-
-        @media (max-width: 480px) {
+*/
+        /*        @media (max-width: 480px) {
             .login-card {
                 padding: 30px 20px;
                 margin: 0 15px;
@@ -860,7 +946,7 @@
                 padding: 12px;
             }
         }
-
+*/
         .tutorial-buttons button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
@@ -875,10 +961,11 @@
             text-decoration: none;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
 
 <body>
-
+    <!--
     <div id="loginOverlay" class="login-overlay">
         <div class="login-card">
             <h1>Bem-vindo</h1>
@@ -890,14 +977,15 @@
             <div id="loginError" class="login-error"></div>
         </div>
     </div>
-
+-->
     <div class="sidebar" id="sidebar">
         <button class="sidebar-toggle" id="sidebarToggle">◀</button>
         <div class="form-container" id="formContainer">
             <h2 class="sidebar-h2">ENTRADA DE DADOS</h2>
 
             <div class="bloco">
-                <div class="campo"><label>Nome Completo</label><input type="text" id="i-nome" oninput="atualizarFicha()">
+                <div class="campo"><label>Nome Completo</label><input type="text" id="i-nome"
+                        oninput="atualizarFicha()">
                 </div>
                 <div class="linha">
                     <div class="campo">
@@ -923,8 +1011,10 @@
                 <div class="campo"><label>Cargo / Especialidade</label><input type="text" id="i-cargo"
                         oninput="atualizarFicha()"></div>
                 <div class="linha">
-                    <div class="campo"><label>Código</label><input type="text" id="i-cod" oninput="atualizarFicha()"></div>
-                    <div class="campo"><label>Etapa</label><input type="text" id="i-etapa" oninput="atualizarFicha()"></div>
+                    <div class="campo"><label>Código</label><input type="text" id="i-cod" oninput="atualizarFicha()">
+                    </div>
+                    <div class="campo"><label>Etapa</label><input type="text" id="i-etapa" oninput="atualizarFicha()">
+                    </div>
                     <div class="campo"><label>CH</label>
                         <select id="i-ch" onchange="atualizarFicha()">
                             <option value=""></option>
@@ -970,10 +1060,16 @@
                     <div class="campo"><label>Admissão</label><input type="date" id="i-adm" onchange="atualizarFicha()">
                     </div>
                 </div>
-                <div class="campo"><label>Lotação 1</label><input type="text" id="i-lot1" oninput="atualizarFicha()"></div>
                 <div class="campo">
                     <div class="checkbox-group">
-                        <input type="checkbox" id="chk-lot2" onchange="atualizarFicha()">
+                        <input type="checkbox" id="chk-lot1" checked onchange="atualizarFicha()">
+                        <label for="chk-lot1">Lotação 1</label>
+                    </div>
+                    <input type="text" id="i-lot1" oninput="atualizarFicha()">
+                </div>
+                <div class="campo">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="chk-lot2" onchange="gerenciarLotacao2()">
                         <label for="chk-lot2">Lotação 2</label>
                     </div>
                     <input type="text" id="i-lot2" oninput="atualizarFicha()">
@@ -982,7 +1078,8 @@
 
             <div class="bloco">
                 <div class="linha">
-                    <div class="campo"><label>Naturalidade</label><input type="text" id="i-nat" oninput="atualizarFicha()">
+                    <div class="campo"><label>Naturalidade</label><input type="text" id="i-nat"
+                            oninput="atualizarFicha()">
                     </div>
                     <div class="campo" style="flex:0 0 60px"><label>UF</label>
                         <select id="i-uf-nat" onchange="atualizarFicha()">
@@ -1017,8 +1114,8 @@
                         </select>
                     </div>
                     <div class="campo"><label>Nacionalidade</label><input type="text" id="i-nacionalidade"
-                            value="BRASILEIRA" onclick="this.value=''" onblur="if(this.value=='') this.value='BRASILEIRA'"
-                            oninput="atualizarFicha()"></div>
+                            value="BRASILEIRA" onclick="this.value=''"
+                            onblur="if(this.value=='') this.value='BRASILEIRA'" oninput="atualizarFicha()"></div>
                 </div>
                 <div class="linha">
                     <div class="campo" style="flex:0 0 60px"><label>Sexo</label>
@@ -1028,7 +1125,8 @@
                             <option value="F">F</option>
                         </select>
                     </div>
-                    <div class="campo"><label>Nascimento</label><input type="date" id="i-nasc" onchange="atualizarFicha()">
+                    <div class="campo"><label>Nascimento</label><input type="date" id="i-nasc"
+                            onchange="atualizarFicha()">
                     </div>
                     <div class="campo"><label>Estado Civil</label>
                         <select id="i-ecivil" onchange="atualizarFicha()">
@@ -1045,8 +1143,10 @@
             </div>
 
             <div class="bloco">
-                <div class="campo"><label>Nome da Mãe</label><input type="text" id="i-mae" oninput="atualizarFicha()"></div>
-                <div class="campo"><label>Nome do Pai</label><input type="text" id="i-pai" oninput="atualizarFicha()"></div>
+                <div class="campo"><label>Nome da Mãe</label><input type="text" id="i-mae" oninput="atualizarFicha()">
+                </div>
+                <div class="campo"><label>Nome do Pai</label><input type="text" id="i-pai" oninput="atualizarFicha()">
+                </div>
                 <div class="campo"><label>Nome do Cônjuge</label><input type="text" id="i-conjuge"
                         oninput="atualizarFicha()"></div>
             </div>
@@ -1056,20 +1156,24 @@
                 <div class="linha">
                     <div class="campo"><label>Número</label><input type="text" id="i-t-num" oninput="atualizarFicha()">
                     </div>
-                    <div class="campo"><label>Zona</label><input type="text" id="i-t-zona" oninput="atualizarFicha()"></div>
-                    <div class="campo"><label>Seção</label><input type="text" id="i-t-sec" oninput="atualizarFicha()"></div>
+                    <div class="campo"><label>Zona</label><input type="text" id="i-t-zona" oninput="atualizarFicha()">
+                    </div>
+                    <div class="campo"><label>Seção</label><input type="text" id="i-t-sec" oninput="atualizarFicha()">
+                    </div>
                 </div>
             </div>
 
             <div class="bloco">
-                <div class="campo"><label>Logradouro / Nº</label><input type="text" id="i-rua" oninput="atualizarFicha()">
+                <div class="campo"><label>Logradouro / Nº</label><input type="text" id="i-rua"
+                        oninput="atualizarFicha()">
                 </div>
                 <div class="campo"><label>Complemento</label><input type="text" id="i-comp" oninput="atualizarFicha()">
                 </div>
                 <div class="linha">
                     <div class="campo"><label>Bairro</label><input type="text" id="i-bairro" oninput="atualizarFicha()">
                     </div>
-                    <div class="campo"><label>Cidade</label><input type="text" id="i-cid" oninput="atualizarFicha()"></div>
+                    <div class="campo"><label>Cidade</label><input type="text" id="i-cid" oninput="atualizarFicha()">
+                    </div>
                 </div>
                 <div class="linha">
                     <div class="campo" style="flex:0 0 60px"><label>UF</label>
@@ -1119,9 +1223,11 @@
                 <div class="linha">
                     <div class="campo"><label>Telefone</label><input type="text" id="i-tel" oninput="atualizarFicha()">
                     </div>
-                    <div class="campo"><label>Celular 1</label><input type="text" id="i-cel1" oninput="atualizarFicha()">
+                    <div class="campo"><label>Celular 1</label><input type="text" id="i-cel1"
+                            oninput="atualizarFicha()">
                     </div>
-                    <div class="campo"><label>Celular 2</label><input type="text" id="i-cel2" oninput="atualizarFicha()">
+                    <div class="campo"><label>Celular 2</label><input type="text" id="i-cel2"
+                            oninput="atualizarFicha()">
                     </div>
                 </div>
                 <div class="campo"><label>E-mail</label><input type="text" id="i-mail"
@@ -1131,7 +1237,9 @@
     </div>
 
     <div class="preview">
-        <button class="btn-print" onclick="window.print()">IMPRIMIR FICHA</button>
+        <button class="btn-print" onclick="window.print()">🖨️ IMPRIMIR FICHA</button>
+        <button class="btn-print" id="btn-copiar-imagem" style="background: #3b82f6; margin-left: 10px;">📸 COPIAR COMO
+            IMAGEM</button>
         <div class="ficha">
             <div class="header-ficha">
                 <div style="font-size:14px; font-weight:bold">GERÊNCIA DE CADASTRO FUNCIONAL</div>
@@ -1213,7 +1321,7 @@
             <div style="margin-top: 10px; font-size: 12px; color: black; text-align: left; visibility: hidden;">
                 *Readaptado: <span id="v-readaptado"></span>
             </div>
-            <div id="estado-civil-msg" style="font-size: 12px; color: black; text-align: left;"></div>
+            <div id="estado-civil-msg" style="font-size: 12px; color: black; text-align: left; margin-top: 4px;"></div>
         </div>
 
         <div class="status-bar">
@@ -1315,35 +1423,36 @@
     <div class="notification" id="notification"></div>
 
     <script>
-        const usuarios = [
-            { login: "gecaf2026", senha: "Br@sil13" },
-            { login: "fulano", senha: "Br@sil13" },
-            { login: "beltrano", senha: "Br@sil13" },
-            { login: "ciclano", senha: "Br@sil13" }
-        ];
-		
-		let arquivoCarregado = false;
-
-        function fazerLogin() {
-            const user = document.getElementById('loginUser').value.trim();
-            const pass = document.getElementById('loginPass').value.trim();
-            const errorDiv = document.getElementById('loginError');
-
-            const encontrado = usuarios.find(u => u.login === user && u.senha === pass);
-
-            if (encontrado) {
-                sessionStorage.setItem('logado', 'true');
-                document.getElementById('loginOverlay').style.display = 'none';
-                errorDiv.innerText = '';
-            } else {
-                errorDiv.innerText = 'Usuário ou senha inválidos';
-            }
-        }
-
-        (function verificarLogin() {
-            document.getElementById('loginOverlay').style.display = 'none';
-        })();
-
+        /*        const usuarios = [
+                    { login: "gecaf2026", senha: "Br@sil13" },
+                    { login: "fulano", senha: "Br@sil13" },
+                    { login: "beltrano", senha: "Br@sil13" },
+                    { login: "ciclano", senha: "Br@sil13" }
+                ];
+        
+                let arquivoCarregado = false;
+        
+                function fazerLogin() {
+                    const user = document.getElementById('loginUser').value.trim();
+                    const pass = document.getElementById('loginPass').value.trim();
+                    const errorDiv = document.getElementById('loginError');
+        
+                    const encontrado = usuarios.find(u => u.login === user && u.senha === pass);
+        
+                    if (encontrado) {
+                        sessionStorage.setItem('logado', 'true');
+                        document.getElementById('loginOverlay').style.display = 'none';
+                        errorDiv.innerText = '';
+                    } else {
+                        errorDiv.innerText = 'Usuário ou senha inválidos';
+                    }
+                }
+        
+                (function verificarLogin() {
+                    document.getElementById('loginOverlay').style.display = 'none';
+                })();
+        */
+        let arquivoCarregado = false;
         function formatarData(data) {
             if (!data) return '';
             const partes = data.split('-');
@@ -1352,7 +1461,14 @@
             }
             return '';
         }
-
+        function gerenciarLotacao2() {
+            const chkLot1 = document.getElementById('chk-lot1');
+            const chkLot2 = document.getElementById('chk-lot2');
+            if (chkLot2.checked && !chkLot1.checked) {
+                chkLot1.checked = true;
+            }
+            atualizarFicha();
+        }
         function atualizarFicha() {
             const get = id => document.getElementById(id).value.toUpperCase();
 
@@ -1363,12 +1479,12 @@
             document.getElementById('v-cargo').innerText = get('i-cargo');
             document.getElementById('v-cod').innerText = get('i-cod');
             document.getElementById('v-etapa').innerText = get('i-etapa');
-			const carreira = get('i-carreira');
-			if (carreira) {
-				document.getElementById('v-carreira').innerText = carreira;
-			} else {
-				document.getElementById('v-carreira').innerText = '-----';
-			}
+            const carreira = get('i-carreira');
+            if (carreira) {
+                document.getElementById('v-carreira').innerText = carreira;
+            } else {
+                document.getElementById('v-carreira').innerText = '-----';
+            }
             document.getElementById('v-vinculo').innerText = get('i-vinculo') || 'ESTATUTÁRIO';
             document.getElementById('v-ch').innerText = get('i-ch');
 
@@ -1376,6 +1492,12 @@
 
             const chkApo = document.getElementById('chk-apo').checked;
             const chkDes = document.getElementById('chk-des').checked;
+
+            const isInativo = chkApo || chkDes;
+            if (isInativo) {
+                document.getElementById('chk-lot1').checked = false;
+                document.getElementById('chk-lot2').checked = false;
+            }
 
             document.getElementById('i-apo').disabled = !chkApo;
             document.getElementById('i-des').disabled = !chkDes;
@@ -1392,22 +1514,35 @@
                 document.getElementById('v-des').innerText = '';
             }
 
+            const mostrarLot1 = document.getElementById('chk-lot1').checked;
             const mostrarLot2 = document.getElementById('chk-lot2').checked;
             const lot1 = get('i-lot1');
             const lot2 = get('i-lot2');
             const container = document.getElementById('lotacao-container');
             container.innerHTML = '';
-            if (lot1) {
-                const d1 = document.createElement('div');
-                d1.className = 'lotacao-item';
-                d1.innerText = lot1;
-                container.appendChild(d1);
-            }
-            if (mostrarLot2 && lot2 && lot2 !== lot1) {
-                const d2 = document.createElement('div');
-                d2.className = 'lotacao-item';
-                d2.innerText = lot2;
-                container.appendChild(d2);
+            if (isInativo) {
+                const semLotacao = document.createElement('div');
+                semLotacao.className = 'lotacao-item';
+                semLotacao.innerText = '-----';
+                container.appendChild(semLotacao);
+            } else {
+                if (mostrarLot1 && lot1) {
+                    const d1 = document.createElement('div');
+                    d1.className = 'lotacao-item';
+                    d1.innerText = lot1;
+                    container.appendChild(d1);
+                    if (mostrarLot2 && lot2 && lot2 !== lot1) {
+                        const d2 = document.createElement('div');
+                        d2.className = 'lotacao-item';
+                        d2.innerText = lot2;
+                        container.appendChild(d2);
+                    }
+                } else {
+                    const semLotacao = document.createElement('div');
+                    semLotacao.className = 'lotacao-item';
+                    semLotacao.innerText = '-----';
+                    container.appendChild(semLotacao);
+                }
             }
 
             const cellApo = document.getElementById('cell-apo');
@@ -1478,16 +1613,22 @@
             document.getElementById('v-cel2').innerText = document.getElementById('i-cel2').value || '-----';
             document.getElementById('v-mail').innerText = document.getElementById('i-mail').value.toLowerCase();
 
-			let msg = '';
-			if (arquivoCarregado && !carreira) {
-				msg += '* Carreira não preenchida. ';
-			}
-			if ((estadoCivil === 'CASADO' || estadoCivil === 'UNIÃO ESTÁVEL') && conjugeVazio) {
-				msg += '* ' + estadoCivil + ' sem cônjuge';
-			} else if (estadosSemConjuge.includes(estadoCivil) && !conjugeVazio) {
-				msg += '* ' + estadoCivil + ' com cônjuge';
-			}
-			document.getElementById('estado-civil-msg').innerText = msg;
+            let msg = '';
+            if (arquivoCarregado && !carreira) {
+                msg += '* Carreira não preenchida. ';
+            }
+            if ((estadoCivil === 'CASADO' || estadoCivil === 'UNIÃO ESTÁVEL') && conjugeVazio) {
+                msg += '* ' + estadoCivil + ' sem cônjuge';
+            } else if (estadosSemConjuge.includes(estadoCivil) && !conjugeVazio) {
+                msg += '* ' + estadoCivil + ' com cônjuge';
+            }
+            document.getElementById('estado-civil-msg').innerText = msg;
+            const msgDiv = document.getElementById('estado-civil-msg');
+            if (msg.trim() !== '') {
+                msgDiv.className = 'aviso-msg';
+            } else {
+                msgDiv.className = '';
+            }
         }
 
         function abrirModal() {
@@ -1640,6 +1781,11 @@
                 notif.style.display = 'none';
             }, 4000);
         }
+        if (typeof ClipboardItem === 'undefined') {
+            window.ClipboardItem = function (items) {
+                this.items = items;
+            };
+        }
 
         function converterDataBrParaInput(dataStr) {
             if (!dataStr || dataStr.trim() === '') return '';
@@ -1766,6 +1912,14 @@
                     document.getElementById('i-des').value = '';
                     document.getElementById('chk-des').checked = false;
                 }
+                const temApo = dados[idx.DATA_APOSENTADORIA] && dados[idx.DATA_APOSENTADORIA] !== '';
+                const temDes = dados[idx.DATA_DESLIGAMENTO] && dados[idx.DATA_DESLIGAMENTO] !== '';
+                if (temApo || temDes) {
+                    document.getElementById('chk-lot1').checked = false;
+                    document.getElementById('chk-lot2').checked = false;
+                } else {
+                    document.getElementById('chk-lot1').checked = true;
+                }
 
                 if (dados[idx.LOTACAO]) document.getElementById('i-lot1').value = dados[idx.LOTACAO];
                 if (dados[idx.LOT_SECUNDARIA]) document.getElementById('i-lot2').value = dados[idx.LOT_SECUNDARIA];
@@ -1815,16 +1969,16 @@
                 onBlurCPF();
                 onBlurMat();
                 onBlurCEP();
-				
-				arquivoCarregado = true;
-				
+
+                arquivoCarregado = true;
+
                 atualizarFicha();
                 fecharModal();
                 mostrarNotificacao('Arquivo carregado com sucesso!');
             };
             reader.readAsText(file, 'UTF-8');
         }
-		
+
         function resetarFormulario() {
             document.getElementById('i-nome').value = '';
             document.getElementById('i-cpf').value = '';
@@ -1865,6 +2019,7 @@
 
             document.getElementById('chk-apo').checked = true;
             document.getElementById('chk-des').checked = true;
+            document.getElementById('chk-lot1').checked = true;
             document.getElementById('chk-lot2').checked = false;
 
             document.getElementById('i-apo').disabled = false;
@@ -1876,8 +2031,8 @@
 
             document.getElementById('v-readaptado').innerText = 'não';
 
-			arquivoCarregado = false;
-			
+            arquivoCarregado = false;
+
             atualizarFicha();
         }
 
@@ -2123,11 +2278,43 @@
         function formatarCEP(digitos) {
             return `${digitos.slice(0, 2)}.${digitos.slice(2, 5)}-${digitos.slice(5)}`;
         }
-
+        document.getElementById('btn-copiar-imagem').addEventListener('click', function () {
+            const elemento = document.querySelector('.ficha-grid');
+            if (!elemento) {
+                mostrarNotificacao('Elemento não encontrado para capturar.');
+                return;
+            }
+            mostrarNotificacao('Gerando imagem...');
+            html2canvas(elemento, {
+                scale: 2,
+                backgroundColor: '#ffffff',
+                logging: false,
+                useCORS: false
+            }).then(canvas => {
+                canvas.toBlob(function (blob) {
+                    try {
+                        navigator.clipboard.write([
+                            new ClipboardItem({
+                                [blob.type]: blob
+                            })
+                        ]);
+                        mostrarNotificacao('Imagem copiada para a área de transferência!');
+                    } catch (err) {
+                        mostrarNotificacao('Não foi possível copiar automaticamente. Clique com botão direito na imagem para salvar.');
+                        const win = window.open();
+                        win.document.write('<img src="' + canvas.toDataURL() + '" style="max-width:100%;">');
+                        win.document.title = 'Captura da Ficha';
+                    }
+                }, 'image/png');
+            }).catch(error => {
+                console.error('Erro ao gerar imagem:', error);
+                mostrarNotificacao('Erro ao gerar a imagem. Tente novamente.');
+            });
+        });
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const toggleBtn = document.getElementById('sidebarToggle');
-            
+
             if (sidebar.classList.contains('collapsed')) {
                 sidebar.classList.remove('collapsed');
                 toggleBtn.innerHTML = '◀';
