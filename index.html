@@ -489,7 +489,17 @@
             }
 
             /* Ajuste de larguras relativas para impressão */
-            .w-40, .w-30, .w-20, .w-15, .w-10, .w-5, .w-50, .w-55, .w-60, .w-80, .w-100 {
+            .w-40,
+            .w-30,
+            .w-20,
+            .w-15,
+            .w-10,
+            .w-5,
+            .w-50,
+            .w-55,
+            .w-60,
+            .w-80,
+            .w-100 {
                 flex: 1 1 auto;
             }
 
@@ -959,6 +969,50 @@
 
         .tutorial-bubble a:hover {
             text-decoration: none;
+        }
+
+        /* Modal piscante sobre os botões flutuantes */
+        .aviso-piscante {
+            position: fixed;
+            bottom: 270px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #ff4444;
+            border: 3px solid red;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+            transition: transform 0.2s;
+            animation: piscar 0.8s infinite;
+        }
+
+        .aviso-piscante:hover {
+            transform: scale(1.1);
+        }
+
+        @keyframes piscar {
+            0% {
+                opacity: 1;
+                background-color: #ff4444;
+            }
+
+            50% {
+                opacity: 0.5;
+                background-color: #cc0000;
+            }
+
+            100% {
+                opacity: 1;
+                background-color: #ff4444;
+            }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -1432,6 +1486,35 @@
 
     <div class="notification" id="notification"></div>
 
+    <!-- Modal de aviso piscante sobre os botões flutuantes -->
+    <div id="avisoPiscante" class="aviso-piscante" style="display: none;">
+        <span style="font-size: 2rem; margin-top: -14px;">⚠️</span>
+    </div>
+
+    <!-- Modal de alerta para exibir os avisos -->
+    <div class="modal-overlay" id="modalAvisoOverlay" onclick="if(event.target===this) fecharModalAviso()">
+        <div class="modal-winxp">
+            <div class="modal-title">
+                <span>Ajustes necessários</span>
+                <div class="window-controls">
+                    <button onclick="return false;">─</button>
+                    <button onclick="return false;">□</button>
+                    <button onclick="fecharModalAviso()">✕</button>
+                </div>
+            </div>
+            <div class="modal-content">
+                <div style="display: flex; align-items: center; justify-content: center;">
+                    <div class="clippy-box" style="width: fit-content;">
+                        <img id="tutorialImage" src="imagens/clippy-03.gif" alt="Clippy" class="tutorial-img"
+                            onclick="proximoPassoTutorial()" style="">
+                    </div>
+                    <div id="textoAvisoModal" style="text-align: left; font-size: 1rem; font-weight: 700;"></div>
+                </div>
+                <button onclick="fecharModalAviso()">OK</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         /*        const usuarios = [
                     { login: "gecaf2026", senha: "Br@sil13" },
@@ -1639,6 +1722,7 @@
             } else {
                 msgDiv.className = '';
             }
+            verificarEAjustarAvisoPiscante();
         }
 
         function abrirModal() {
@@ -2334,6 +2418,43 @@
             }
         }
 
+        // Função para verificar se há avisos e mostrar/esconder o modal piscante
+        function verificarEAjustarAvisoPiscante() {
+            const avisoDiv = document.getElementById('avisoPiscante');
+            const msgElement = document.getElementById('estado-civil-msg');
+            if (!avisoDiv || !msgElement) return;
+
+            const temAviso = msgElement.innerText.trim() !== '';
+            if (temAviso) {
+                avisoDiv.style.display = 'flex';
+            } else {
+                avisoDiv.style.display = 'none';
+            }
+        }
+
+        // Função para abrir o modal de aviso com a mensagem atual
+        function abrirModalAviso() {
+            const msgElement = document.getElementById('estado-civil-msg');
+            if (!msgElement) return;
+            const mensagem = msgElement.innerText.trim();
+            if (mensagem === '') return;
+
+            document.getElementById('textoAvisoModal').innerText = mensagem;
+            document.getElementById('modalAvisoOverlay').style.display = 'flex';
+        }
+
+        function fecharModalAviso() {
+            document.getElementById('modalAvisoOverlay').style.display = 'none';
+        }
+
+        // Adicionar evento de clique no modal piscante
+        document.addEventListener('DOMContentLoaded', function () {
+            const avisoPiscante = document.getElementById('avisoPiscante');
+            if (avisoPiscante) {
+                avisoPiscante.addEventListener('click', abrirModalAviso);
+            }
+        });
+
         window.onload = function () {
             atualizarFicha();
             document.getElementById('modalOverlay').style.display = 'none';
@@ -2350,6 +2471,9 @@
             onBlurCEP();
 
             document.getElementById('sidebarToggle').addEventListener('click', toggleSidebar);
+
+            document.getElementById('modalAvisoOverlay').style.display = 'none';
+            verificarEAjustarAvisoPiscante();
         };
     </script>
 
