@@ -325,6 +325,7 @@
             gap: 10px;
             padding-left: 74px;
             position: relative;
+            width: 70%;
         }
 
         .clippy-refresh {
@@ -356,19 +357,33 @@
 
         .copyright {
             display: flex;
-            gap: 20px;
+            flex-wrap: wrap;
+            width: 30%;
+            height: 35px;
+            justify-content: flex-end;
+            align-items: center;
         }
 
         .copyright a {
             color: #b0d4ff;
             text-decoration: none;
             font-size: 12px;
+            margin-right: 20px;
         }
 
         .copyright a:hover {
             text-decoration: underline;
         }
-
+        .clippy-alert {
+            display: flex; 
+        }
+        .clippy-alert-text {
+            padding-left: 5px;
+            text-align: left; 
+            font-size: 1rem; 
+            font-weight: 700;
+            
+        }
         @media (max-width: 600px) {
             .status-bar {
                 flex-direction: column;
@@ -678,7 +693,6 @@
             border-right-color: #ffffff;
             border-bottom-color: #ffffff;
         }
-
         .modal-tutorial {
             width: 700px;
             height: 500px;
@@ -707,12 +721,10 @@
         .clippy-box {
             width: 120px;
             height: 90px;
-            margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 0;
-            background: transparent;
         }
 
         .tutorial-img {
@@ -862,7 +874,16 @@
             text-align: center;
             animation: fadeIn 0.5s ease-out;
         }
-
+        .modal-content .copyright {
+            flex-wrap: nowrap;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            flex-direction: row; 
+            align-items: center; 
+            justify-content: space-evenly; 
+            margin-top: 10px;
+        }
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -1386,7 +1407,7 @@
             </div>
             <div class="copyright">
                 <a href="https://bmfolio.web.app/" title="" target="_blank" rel="noopener noreferrer">
-                    <span>© <span id="ano-atual">2025</span> Bruno Moraes</span>
+                    <span>© <span class="ano-atual">2025</span> Bruno Moraes</span>
                 </a>
                 <a href="licenca-agplv3.html" title="Visualizar licença AGPLv3" target="_blank"
                     rel="noopener noreferrer">AGPL-3.0 license</a>
@@ -1435,8 +1456,13 @@
                     Todos os dados inseridos permanecem apenas no seu navegador.<br>
                     Nenhuma informação é enviada a servidores externos.<br>
                 </p>
-                <p style="text-align: left; font-size: 13px;">versão: 1.8 (100426.0832)</p>
-                <ul style="margin-top: 8px; padding-left: 20px; font-size: 12px; text-align: left;">
+				<p style="text-align: left; font-size: 13px;"><strong>versão: 1.10</strong> (160426.1407)</p>
+                <ul style="margin-top: 8px; padding-left: 20px; font-size: 10px; text-align: left;">
+					<li>Botão de alerta de erro</li>
+					<li>Correção do preenchimento automatico ao carregar <br>a informação separado judicialmente</li>
+                </ul>
+                <p style="text-align: left; font-size: 13px;"><strong>versão: 1.08</strong> (160426.1407)</p>
+                <ul style="margin-top: 8px; padding-left: 20px; font-size: 10px; text-align: left;">
                     <li>Checkbox Lotação 1 (marcado por padrão)</li>
                     <li>Lotação 2 ativa Lotação 1 automaticamente</li>
                     <li>Aposentado/desligado: lotações desmarcadas e preview "-----"</li>
@@ -1444,9 +1470,15 @@
                     <li>Mensagens de aviso com fundo amarelo</li>
                     <li>Botão "📸 COPIAR COMO IMAGEM" (copia ficha-grid)</li>
                     <li>Impressão com fonte menor e quebra de palavras</li>
-                    <li>Impressão com fonte menor e quebra de palavras</li>
                 </ul>
                 <button onclick="fecharModalInfo()">Fechar</button>
+				<div class="copyright" style="">
+                <a style="color: black" href="https://bmfolio.web.app/" title="" target="_blank" rel="noopener noreferrer">
+                    <span>© <span class="ano-atual">2025</span> Bruno Moraes</span>
+                </a>
+                <a style="color: black" href="licenca-agplv3.html" title="Visualizar licença AGPLv3" target="_blank"
+                    rel="noopener noreferrer">AGPL-3.0 license</a>
+				</div>
             </div>
         </div>
     </div>
@@ -1503,12 +1535,12 @@
                 </div>
             </div>
             <div class="modal-content">
-                <div style="display: flex; align-items: center; justify-content: center;">
+                <div class="clippy-alert">
                     <div class="clippy-box" style="width: fit-content;">
                         <img id="tutorialImage" src="imagens/clippy-03.gif" alt="Clippy" class="tutorial-img"
-                            onclick="proximoPassoTutorial()" style="">
+                            onclick="proximoPassoTutorial()">
                     </div>
-                    <div id="textoAvisoModal" style="text-align: left; font-size: 1rem; font-weight: 700;"></div>
+                    <div id="textoAvisoModal" class="clippy-alert-text"></div>
                 </div>
                 <button onclick="fecharModalAviso()">OK</button>
             </div>
@@ -1893,18 +1925,19 @@
             return '';
         }
 
-        function normalizarEstadoCivil(valor) {
-            if (!valor) return '';
-            const str = valor.toUpperCase().trim();
-            const semPrefixo = str.replace(/^\d+\s*-\s*/, '');
-            if (semPrefixo.includes('SOLTEIRO')) return 'SOLTEIRO';
-            if (semPrefixo.includes('CASADO')) return 'CASADO';
-            if (semPrefixo.includes('DIVORCIADO')) return 'DIVORCIADO';
-            if (semPrefixo.includes('SEPARADO')) return 'SEPARADO JUDICIALMENTE';
-            if (semPrefixo.includes('VIÚVO') || semPrefixo.includes('VIUVO')) return 'VIÚVO';
-            if (semPrefixo.includes('UNIÃO') || semPrefixo.includes('UNIAO')) return 'UNIÃO ESTÁVEL';
-            return '';
-        }
+		function normalizarEstadoCivil(valor) {
+			if (!valor) return '';
+			const str = valor.toUpperCase().trim();
+			const semPrefixo = str.replace(/^\d+\s*-\s*/, '');
+			if (semPrefixo.includes('SOLTEIRO')) return 'SOLTEIRO';
+			if (semPrefixo.includes('CASADO')) return 'CASADO';
+			if (semPrefixo.includes('DIVORCIADO')) return 'DIVORCIADO';
+			// CORREÇÃO: aceita tanto "SEPARADO" quanto "SEPARACAO"
+			if (semPrefixo.includes('SEPARADO') || semPrefixo.includes('SEPARACAO')) return 'SEPARADO JUDICIALMENTE';
+			if (semPrefixo.includes('VIÚVO') || semPrefixo.includes('VIUVO')) return 'VIÚVO';
+			if (semPrefixo.includes('UNIÃO') || semPrefixo.includes('UNIAO')) return 'UNIÃO ESTÁVEL';
+			return '';
+		}
 
         function processarArquivo(file) {
             const reader = new FileReader();
@@ -2462,7 +2495,10 @@
             document.getElementById('modalTutorialOverlay').style.display = 'none';
             document.getElementById('v-readaptado').innerText = 'não';
 
-            document.getElementById('ano-atual').textContent = new Date().getFullYear();
+            //document.getElementById('ano-atual').textContent = new Date().getFullYear();
+			document.querySelectorAll('.ano-atual').forEach(el => {
+				el.textContent = new Date().getFullYear();
+			});
 
             carregarFraseClippy();
 
