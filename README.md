@@ -28,15 +28,6 @@ Ele aparece sempre com uma frase inspiradora — só para lembrar que, mesmo no 
 
 ![Versão](https://img.shields.io/badge/versão-1.8-blue)
 
-### Atualizações da versão 1.8
-- Checkbox Lotação 1 (marcado por padrão)
-- Lotação 2 ativa Lotação 1 automaticamente
-- Aposentado e/ou desligado: lotações desmarcadas e preview "-----"
-- Login removido (com comentário)
-- Mensagens de aviso com fundo amarelo
-- Botão "📸 COPIAR COMO IMAGEM" (copia o elemento ficha-grid)
-- Impressão com fonte menor e quebra de palavras
-
 ---
 
 # ✨ Principais características
