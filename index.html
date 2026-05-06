@@ -2405,7 +2405,8 @@
         function formatarCEP(digitos) {
             return `${digitos.slice(0, 2)}.${digitos.slice(2, 5)}-${digitos.slice(5)}`;
         }
-        document.getElementById('btn-copiar-imagem').addEventListener('click', function () {
+        /* BKP 06/05/2026
+		document.getElementById('btn-copiar-imagem').addEventListener('click', function () {
             const elemento = document.querySelector('.ficha-grid');
             if (!elemento) {
                 mostrarNotificacao('Elemento não encontrado para capturar.');
@@ -2438,6 +2439,70 @@
                 mostrarNotificacao('Erro ao gerar a imagem. Tente novamente.');
             });
         });
+		*/ /* FIM BKP */
+		/********/
+		document.getElementById('btn-copiar-imagem').addEventListener('click', function () {
+		    const fichaOriginal = document.querySelector('.ficha');
+		    if (!fichaOriginal) {
+		        mostrarNotificacao('Elemento da ficha não encontrado.');
+		        return;
+		    }
+		
+		    mostrarNotificacao('Gerando imagem... (pode levar alguns segundos)');
+		
+		    // Clona a ficha inteira
+		    const cloneFicha = fichaOriginal.cloneNode(true);
+		
+		    // Estilos para garantir tamanho fixo e remover transformações
+		    cloneFicha.style.position = 'absolute';
+		    cloneFicha.style.top = '-9999px';
+		    cloneFicha.style.left = '-9999px';
+		    cloneFicha.style.width = '970px';          // Largura original da ficha
+		    cloneFicha.style.backgroundColor = 'white';
+		    cloneFicha.style.margin = '0';
+		    cloneFicha.style.padding = '10mm 5mm';      // Mesmo padding original
+		    cloneFicha.style.boxSizing = 'border-box';
+		    cloneFicha.style.transform = 'none';
+		
+		    // Força que todos os elementos internos mantenham o tamanho
+		    cloneFicha.querySelectorAll('*').forEach(el => {
+		        el.style.transform = 'none';
+		    });
+		
+		    document.body.appendChild(cloneFicha);
+		
+		    // Pequeno delay para o navegador aplicar os estilos
+		    setTimeout(() => {
+		        html2canvas(cloneFicha, {
+		            scale: 1.2,                      // Resolução suficiente (ajustável)
+		            backgroundColor: '#ffffff',
+		            logging: false,
+		            useCORS: false
+		        }).then(canvas => {
+		            // Remove o clone
+		            document.body.removeChild(cloneFicha);
+		
+		            canvas.toBlob(blob => {
+		                try {
+		                    navigator.clipboard.write([
+		                        new ClipboardItem({ [blob.type]: blob })
+		                    ]);
+		                    mostrarNotificacao('Imagem copiada para a área de transferência!');
+		                } catch (err) {
+		                    mostrarNotificacao('Não foi possível copiar automaticamente. Clique com botão direito na imagem para salvar.');
+		                    const win = window.open();
+		                    win.document.write('<img src="' + canvas.toDataURL() + '" style="max-width:100%;">');
+		                    win.document.title = 'Ficha Cadastral';
+		                }
+		            }, 'image/png');
+		        }).catch(error => {
+		            console.error('Erro ao gerar imagem:', error);
+		            if (cloneFicha.parentNode) document.body.removeChild(cloneFicha);
+		            mostrarNotificacao('Erro ao gerar a imagem. Tente novamente.');
+		        });
+		    }, 100);
+		});
+		/*******/
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const toggleBtn = document.getElementById('sidebarToggle');
