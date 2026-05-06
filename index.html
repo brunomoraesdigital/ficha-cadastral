@@ -2405,7 +2405,7 @@
         function formatarCEP(digitos) {
             return `${digitos.slice(0, 2)}.${digitos.slice(2, 5)}-${digitos.slice(5)}`;
         }
-        /* BKP 06/05/2026
+        /* BKP 06/05/2026 */
 		document.getElementById('btn-copiar-imagem').addEventListener('click', function () {
             const elemento = document.querySelector('.ficha-grid');
             if (!elemento) {
@@ -2439,68 +2439,8 @@
                 mostrarNotificacao('Erro ao gerar a imagem. Tente novamente.');
             });
         });
-		*/ /* FIM BKP */
-		/********/
-		document.getElementById('btn-copiar-imagem').addEventListener('click', function () {
-		    const grid = document.querySelector('.ficha-grid');
-		    if (!grid) {
-		        mostrarNotificacao('Tabela não encontrada.');
-		        return;
-		    }
-		
-		    mostrarNotificacao('Gerando imagem...');
-		
-		    // Salva os estilos originais que podem interferir
-		    const originalWidth = grid.style.width;
-		    const originalTransform = grid.style.transform;
-		    const originalPosition = grid.style.position;
-		    const originalMargin = grid.style.margin;
-		
-		    // Força a largura fixa e remove transformações durante a captura
-		    grid.style.width = '970px';
-		    grid.style.transform = 'none';
-		    grid.style.margin = '0 auto'; // centraliza visualmente, mas não afeta a captura
-		
-		    // Pequeno delay para o navegador aplicar as mudanças
-		    setTimeout(() => {
-		        html2canvas(grid, {
-		            scale: 1.2,
-		            backgroundColor: '#ffffff',
-		            logging: false,
-		            useCORS: false
-		        }).then(canvas => {
-		            // Restaura os estilos originais
-		            grid.style.width = originalWidth;
-		            grid.style.transform = originalTransform;
-		            grid.style.position = originalPosition;
-		            grid.style.margin = originalMargin;
-		
-		            // Copia a imagem
-		            canvas.toBlob(blob => {
-		                try {
-		                    navigator.clipboard.write([
-		                        new ClipboardItem({ [blob.type]: blob })
-		                    ]);
-		                    mostrarNotificacao('Imagem copiada!');
-		                } catch (err) {
-		                    mostrarNotificacao('Clique com botão direito na imagem para salvar.');
-		                    const win = window.open();
-		                    win.document.write('<img src="' + canvas.toDataURL() + '" style="max-width:100%;">');
-		                    win.document.title = 'Tabela Cadastral';
-		                }
-		            }, 'image/png');
-		        }).catch(error => {
-		            console.error(error);
-		            // Restaura mesmo em caso de erro
-		            grid.style.width = originalWidth;
-		            grid.style.transform = originalTransform;
-		            grid.style.position = originalPosition;
-		            grid.style.margin = originalMargin;
-		            mostrarNotificacao('Erro ao gerar imagem.');
-		        });
-		    }, 50);
-		});
-		/*******/
+		/* FIM BKP */
+	
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const toggleBtn = document.getElementById('sidebarToggle');
