@@ -2442,65 +2442,63 @@
 		*/ /* FIM BKP */
 		/********/
 		document.getElementById('btn-copiar-imagem').addEventListener('click', function () {
-		    const fichaOriginal = document.querySelector('.ficha');
-		    if (!fichaOriginal) {
-		        mostrarNotificacao('Elemento da ficha não encontrado.');
+		    const grid = document.querySelector('.ficha-grid');
+		    if (!grid) {
+		        mostrarNotificacao('Tabela não encontrada.');
 		        return;
 		    }
 		
-		    mostrarNotificacao('Gerando imagem... (pode levar alguns segundos)');
+		    mostrarNotificacao('Gerando imagem...');
 		
-		    // Clona a ficha inteira
-		    const cloneFicha = fichaOriginal.cloneNode(true);
+		    // Salva os estilos originais que podem interferir
+		    const originalWidth = grid.style.width;
+		    const originalTransform = grid.style.transform;
+		    const originalPosition = grid.style.position;
+		    const originalMargin = grid.style.margin;
 		
-		    // Estilos para garantir tamanho fixo e remover transformações
-		    cloneFicha.style.position = 'absolute';
-		    cloneFicha.style.top = '-9999px';
-		    cloneFicha.style.left = '-9999px';
-		    cloneFicha.style.width = '970px';          // Largura original da ficha
-		    cloneFicha.style.backgroundColor = 'white';
-		    cloneFicha.style.margin = '0';
-		    cloneFicha.style.padding = '10mm 5mm';      // Mesmo padding original
-		    cloneFicha.style.boxSizing = 'border-box';
-		    cloneFicha.style.transform = 'none';
+		    // Força a largura fixa e remove transformações durante a captura
+		    grid.style.width = '970px';
+		    grid.style.transform = 'none';
+		    grid.style.margin = '0 auto'; // centraliza visualmente, mas não afeta a captura
 		
-		    // Força que todos os elementos internos mantenham o tamanho
-		    cloneFicha.querySelectorAll('*').forEach(el => {
-		        el.style.transform = 'none';
-		    });
-		
-		    document.body.appendChild(cloneFicha);
-		
-		    // Pequeno delay para o navegador aplicar os estilos
+		    // Pequeno delay para o navegador aplicar as mudanças
 		    setTimeout(() => {
-		        html2canvas(cloneFicha, {
-		            scale: 1.2,                      // Resolução suficiente (ajustável)
+		        html2canvas(grid, {
+		            scale: 1.2,
 		            backgroundColor: '#ffffff',
 		            logging: false,
 		            useCORS: false
 		        }).then(canvas => {
-		            // Remove o clone
-		            document.body.removeChild(cloneFicha);
+		            // Restaura os estilos originais
+		            grid.style.width = originalWidth;
+		            grid.style.transform = originalTransform;
+		            grid.style.position = originalPosition;
+		            grid.style.margin = originalMargin;
 		
+		            // Copia a imagem
 		            canvas.toBlob(blob => {
 		                try {
 		                    navigator.clipboard.write([
 		                        new ClipboardItem({ [blob.type]: blob })
 		                    ]);
-		                    mostrarNotificacao('Imagem copiada para a área de transferência!');
+		                    mostrarNotificacao('Imagem copiada!');
 		                } catch (err) {
-		                    mostrarNotificacao('Não foi possível copiar automaticamente. Clique com botão direito na imagem para salvar.');
+		                    mostrarNotificacao('Clique com botão direito na imagem para salvar.');
 		                    const win = window.open();
 		                    win.document.write('<img src="' + canvas.toDataURL() + '" style="max-width:100%;">');
-		                    win.document.title = 'Ficha Cadastral';
+		                    win.document.title = 'Tabela Cadastral';
 		                }
 		            }, 'image/png');
 		        }).catch(error => {
-		            console.error('Erro ao gerar imagem:', error);
-		            if (cloneFicha.parentNode) document.body.removeChild(cloneFicha);
-		            mostrarNotificacao('Erro ao gerar a imagem. Tente novamente.');
+		            console.error(error);
+		            // Restaura mesmo em caso de erro
+		            grid.style.width = originalWidth;
+		            grid.style.transform = originalTransform;
+		            grid.style.position = originalPosition;
+		            grid.style.margin = originalMargin;
+		            mostrarNotificacao('Erro ao gerar imagem.');
 		        });
-		    }, 100);
+		    }, 50);
 		});
 		/*******/
         function toggleSidebar() {
