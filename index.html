@@ -2405,7 +2405,7 @@
         function formatarCEP(digitos) {
             return `${digitos.slice(0, 2)}.${digitos.slice(2, 5)}-${digitos.slice(5)}`;
         }
-        /* BKP 06/05/2026 */
+        /* BKP 06/05/2026 *//*
 		document.getElementById('btn-copiar-imagem').addEventListener('click', function () {
             const elemento = document.querySelector('.ficha-grid');
             if (!elemento) {
@@ -2439,8 +2439,79 @@
                 mostrarNotificacao('Erro ao gerar a imagem. Tente novamente.');
             });
         });
-		/* FIM BKP */
-	
+		*//* FIM BKP */
+        /**********************************************/
+        document.getElementById('btn-copiar-imagem').addEventListener('click', function () {
+            const fichaOriginal = document.querySelector('.ficha');
+            if (!fichaOriginal) {
+                mostrarNotificacao('Ficha não encontrada.');
+                return;
+            }
+
+            mostrarNotificacao('Gerando imagem...');
+
+            // Clona a ficha inteira
+            const clone = fichaOriginal.cloneNode(true);
+
+            // Remove o cabeçalho ("GERÊNCIA DE CADASTRO FUNCIONAL")
+            const header = clone.querySelector('.header-ficha');
+            if (header) header.remove();
+
+            // Remove possíveis mensagens de aviso
+            const aviso = clone.querySelector('#estado-civil-msg');
+            if (aviso) aviso.remove();
+
+            // Remove o div oculto do readaptado (que tem visibility: hidden)
+            const readaptadoDiv = clone.querySelector('div[style*="visibility: hidden"]');
+            if (readaptadoDiv) readaptadoDiv.remove();
+
+            // Força largura fixa e remove transformações
+            clone.style.position = 'absolute';
+            clone.style.top = '-9999px';
+            clone.style.left = '-9999px';
+            clone.style.width = '970px';
+            clone.style.backgroundColor = 'white';
+            clone.style.padding = '1mm 1mm';  // remove o espaço interno
+            clone.style.margin = '0';
+            clone.style.boxSizing = 'border-box';
+            clone.style.transform = 'none';
+
+            // Remove transform de todos os filhos (importante para evitar distorções)
+            clone.querySelectorAll('*').forEach(el => {
+                el.style.transform = 'none';
+            });
+
+            document.body.appendChild(clone);
+
+            // Aguarda a renderização
+            setTimeout(() => {
+                html2canvas(clone, {
+                    scale: 1.2,
+                    backgroundColor: '#ffffff',
+                    logging: false,
+                    useCORS: false,
+                    letterRendering: true
+                }).then(canvas => {
+                    document.body.removeChild(clone);
+                    canvas.toBlob(blob => {
+                        try {
+                            navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
+                            mostrarNotificacao('Imagem copiada!');
+                        } catch (err) {
+                            mostrarNotificacao('Clique com botão direito na imagem para salvar.');
+                            const win = window.open();
+                            win.document.write('<img src="' + canvas.toDataURL() + '" style="max-width:100%;">');
+                            win.document.title = 'Ficha Cadastral';
+                        }
+                    }, 'image/png');
+                }).catch(error => {
+                    console.error(error);
+                    if (clone.parentNode) document.body.removeChild(clone);
+                    mostrarNotificacao('Erro ao gerar imagem.');
+                });
+            }, 100);
+        });
+        /**********************************************/
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const toggleBtn = document.getElementById('sidebarToggle');
