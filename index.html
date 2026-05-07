@@ -374,16 +374,19 @@
         .copyright a:hover {
             text-decoration: underline;
         }
+
         .clippy-alert {
-            display: flex; 
+            display: flex;
         }
+
         .clippy-alert-text {
             padding-left: 5px;
-            text-align: left; 
-            font-size: 1rem; 
+            text-align: left;
+            font-size: 1rem;
             font-weight: 700;
-            
+
         }
+
         @media (max-width: 600px) {
             .status-bar {
                 flex-direction: column;
@@ -676,6 +679,16 @@
             text-align: center;
         }
 
+        .info-content .update {
+            overflow-Y: scroll;
+            max-height: 200px;
+            padding-left: 10px;
+            padding-right: 10px;
+            background-color: rgba(240, 255, 255, 0.3);
+            box-shadow: inset 0 10px 10px -10px rgba(126, 126, 126, 0.2), inset 0 -10px 10px -10px rgba(126, 126, 126, 0.2);
+            margin-bottom: 10px;
+        }
+
         .modal-content button {
             background: #d4d0c8;
             border: 2px solid #ffffff;
@@ -693,6 +706,7 @@
             border-right-color: #ffffff;
             border-bottom-color: #ffffff;
         }
+
         .modal-tutorial {
             width: 700px;
             height: 500px;
@@ -874,16 +888,18 @@
             text-align: center;
             animation: fadeIn 0.5s ease-out;
         }
+
         .modal-content .copyright {
             flex-wrap: nowrap;
             width: 100%;
             display: flex;
             align-items: center;
-            flex-direction: row; 
-            align-items: center; 
-            justify-content: space-evenly; 
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-evenly;
             margin-top: 10px;
         }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -1450,35 +1466,47 @@
                     <button onclick="fecharModalInfo()">✕</button>
                 </div>
             </div>
-            <div class="modal-content">
-                <p style="text-align: left; font-size: 13px;">
-                    <strong>Como as informações são armazenadas?</strong><br><br>
-                    Todos os dados inseridos permanecem apenas no seu navegador.<br>
-                    Nenhuma informação é enviada a servidores externos.<br>
-                </p>
-				<p style="text-align: left; font-size: 13px;"><strong>versão: 1.10</strong> (160426.1407)</p>
-                <ul style="margin-top: 8px; padding-left: 20px; font-size: 10px; text-align: left;">
-					<li>Botão de alerta de erro</li>
-					<li>Correção do preenchimento automatico ao carregar <br>a informação separado judicialmente</li>
-                </ul>
-                <p style="text-align: left; font-size: 13px;"><strong>versão: 1.08</strong> (160426.1407)</p>
-                <ul style="margin-top: 8px; padding-left: 20px; font-size: 10px; text-align: left;">
-                    <li>Checkbox Lotação 1 (marcado por padrão)</li>
-                    <li>Lotação 2 ativa Lotação 1 automaticamente</li>
-                    <li>Aposentado/desligado: lotações desmarcadas e preview "-----"</li>
-                    <li>Login removido</li>
-                    <li>Mensagens de aviso com fundo amarelo</li>
-                    <li>Botão "📸 COPIAR COMO IMAGEM" (copia ficha-grid)</li>
-                    <li>Impressão com fonte menor e quebra de palavras</li>
-                </ul>
+            <div class="modal-content info-content">
+                <div>
+                    <p style="text-align: left; font-size: 13px;">
+                        <strong>Como as informações são armazenadas?</strong><br><br>
+                        Todos os dados inseridos permanecem apenas <br>no seu navegador.<br>
+                        Nenhuma informação é enviada a servidores <br>externos.<br>
+                    </p>
+                </div>
+                <div style="text-align: left; font-weight: 700; font-size: 13px; padding-bottom: 5px; ">Atualizações</div>
+                <div class="update">
+                    <p style="text-align: left; font-size: 13px;"><strong>versão: 1.11</strong> (070526.0719)</p>
+                    <ul style="margin-top: 8px; padding-left: 20px; font-size: 10px; text-align: left;">
+                        <li>Corrigido a funcionalidade que gera imagem. Em telas <br>pequenas, a ficha encolhia e a
+                            imagem ficava com letras <br>cortadas ou sobrepostas. </li>
+                    </ul>
+                    <p style="text-align: left; font-size: 13px;"><strong>versão: 1.10</strong> (130326.1503)</p>
+                    <ul style="margin-top: 8px; padding-left: 20px; font-size: 10px; text-align: left;">
+                        <li>Botão de alerta de erro</li>
+                        <li>Correção do preenchimento automatico ao carregar <br>a informação separado judicialmente
+                        </li>
+                    </ul>
+                    <p style="text-align: left; font-size: 13px;"><strong>versão: 1.08</strong> (160426.1407)</p>
+                    <ul style="margin-top: 8px; padding-left: 20px; font-size: 10px; text-align: left;">
+                        <li>Checkbox Lotação 1 (marcado por padrão)</li>
+                        <li>Lotação 2 ativa Lotação 1 automaticamente</li>
+                        <li>Aposentado/desligado: lotações desmarcadas <br>e preview "-----"</li>
+                        <li>Login removido</li>
+                        <li>Mensagens de aviso com fundo amarelo</li>
+                        <li>Botão "📸 COPIAR COMO IMAGEM" (copia ficha-grid)</li>
+                        <li>Impressão com fonte menor e quebra de palavras</li>
+                    </ul>
+                </div>
                 <button onclick="fecharModalInfo()">Fechar</button>
-				<div class="copyright" style="">
-                <a style="color: black" href="https://bmfolio.web.app/" title="" target="_blank" rel="noopener noreferrer">
-                    <span>© <span class="ano-atual">2025</span> Bruno Moraes</span>
-                </a>
-                <a style="color: black" href="licenca-agplv3.html" title="Visualizar licença AGPLv3" target="_blank"
-                    rel="noopener noreferrer">AGPL-3.0 license</a>
-				</div>
+                <div class="copyright" style="">
+                    <a style="color: black" href="https://bmfolio.web.app/" title="" target="_blank"
+                        rel="noopener noreferrer">
+                        <span>© <span class="ano-atual">2025</span> Bruno Moraes</span>
+                    </a>
+                    <a style="color: black" href="licenca-agplv3.html" title="Visualizar licença AGPLv3" target="_blank"
+                        rel="noopener noreferrer">AGPL-3.0 license</a>
+                </div>
             </div>
         </div>
     </div>
@@ -1554,16 +1582,16 @@
                     { login: "beltrano", senha: "Br@sil13" },
                     { login: "ciclano", senha: "Br@sil13" }
                 ];
-        
+
                 let arquivoCarregado = false;
-        
+
                 function fazerLogin() {
                     const user = document.getElementById('loginUser').value.trim();
                     const pass = document.getElementById('loginPass').value.trim();
                     const errorDiv = document.getElementById('loginError');
-        
+
                     const encontrado = usuarios.find(u => u.login === user && u.senha === pass);
-        
+
                     if (encontrado) {
                         sessionStorage.setItem('logado', 'true');
                         document.getElementById('loginOverlay').style.display = 'none';
@@ -1572,7 +1600,7 @@
                         errorDiv.innerText = 'Usuário ou senha inválidos';
                     }
                 }
-        
+
                 (function verificarLogin() {
                     document.getElementById('loginOverlay').style.display = 'none';
                 })();
@@ -1925,19 +1953,19 @@
             return '';
         }
 
-		function normalizarEstadoCivil(valor) {
-			if (!valor) return '';
-			const str = valor.toUpperCase().trim();
-			const semPrefixo = str.replace(/^\d+\s*-\s*/, '');
-			if (semPrefixo.includes('SOLTEIRO')) return 'SOLTEIRO';
-			if (semPrefixo.includes('CASADO')) return 'CASADO';
-			if (semPrefixo.includes('DIVORCIADO')) return 'DIVORCIADO';
-			// CORREÇÃO: aceita tanto "SEPARADO" quanto "SEPARACAO"
-			if (semPrefixo.includes('SEPARADO') || semPrefixo.includes('SEPARACAO')) return 'SEPARADO JUDICIALMENTE';
-			if (semPrefixo.includes('VIÚVO') || semPrefixo.includes('VIUVO')) return 'VIÚVO';
-			if (semPrefixo.includes('UNIÃO') || semPrefixo.includes('UNIAO')) return 'UNIÃO ESTÁVEL';
-			return '';
-		}
+        function normalizarEstadoCivil(valor) {
+            if (!valor) return '';
+            const str = valor.toUpperCase().trim();
+            const semPrefixo = str.replace(/^\d+\s*-\s*/, '');
+            if (semPrefixo.includes('SOLTEIRO')) return 'SOLTEIRO';
+            if (semPrefixo.includes('CASADO')) return 'CASADO';
+            if (semPrefixo.includes('DIVORCIADO')) return 'DIVORCIADO';
+            // CORREÇÃO: aceita tanto "SEPARADO" quanto "SEPARACAO"
+            if (semPrefixo.includes('SEPARADO') || semPrefixo.includes('SEPARACAO')) return 'SEPARADO JUDICIALMENTE';
+            if (semPrefixo.includes('VIÚVO') || semPrefixo.includes('VIUVO')) return 'VIÚVO';
+            if (semPrefixo.includes('UNIÃO') || semPrefixo.includes('UNIAO')) return 'UNIÃO ESTÁVEL';
+            return '';
+        }
 
         function processarArquivo(file) {
             const reader = new FileReader();
@@ -2405,41 +2433,6 @@
         function formatarCEP(digitos) {
             return `${digitos.slice(0, 2)}.${digitos.slice(2, 5)}-${digitos.slice(5)}`;
         }
-        /* BKP 06/05/2026 *//*
-		document.getElementById('btn-copiar-imagem').addEventListener('click', function () {
-            const elemento = document.querySelector('.ficha-grid');
-            if (!elemento) {
-                mostrarNotificacao('Elemento não encontrado para capturar.');
-                return;
-            }
-            mostrarNotificacao('Gerando imagem...');
-            html2canvas(elemento, {
-                scale: 1.3,
-                backgroundColor: '#ffffff',
-                logging: false,
-                useCORS: false
-            }).then(canvas => {
-                canvas.toBlob(function (blob) {
-                    try {
-                        navigator.clipboard.write([
-                            new ClipboardItem({
-                                [blob.type]: blob
-                            })
-                        ]);
-                        mostrarNotificacao('Imagem copiada para a área de transferência!');
-                    } catch (err) {
-                        mostrarNotificacao('Não foi possível copiar automaticamente. Clique com botão direito na imagem para salvar.');
-                        const win = window.open();
-                        win.document.write('<img src="' + canvas.toDataURL() + '" style="max-width:100%;">');
-                        win.document.title = 'Captura da Ficha';
-                    }
-                }, 'image/png');
-            }).catch(error => {
-                console.error('Erro ao gerar imagem:', error);
-                mostrarNotificacao('Erro ao gerar a imagem. Tente novamente.');
-            });
-        });
-		*//* FIM BKP */
         /**********************************************/
         document.getElementById('btn-copiar-imagem').addEventListener('click', function () {
             const fichaOriginal = document.querySelector('.ficha');
@@ -2570,9 +2563,9 @@
             document.getElementById('v-readaptado').innerText = 'não';
 
             //document.getElementById('ano-atual').textContent = new Date().getFullYear();
-			document.querySelectorAll('.ano-atual').forEach(el => {
-				el.textContent = new Date().getFullYear();
-			});
+            document.querySelectorAll('.ano-atual').forEach(el => {
+                el.textContent = new Date().getFullYear();
+            });
 
             carregarFraseClippy();
 
