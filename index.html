@@ -1476,6 +1476,11 @@
                 </div>
                 <div style="text-align: left; font-weight: 700; font-size: 13px; padding-bottom: 5px; ">Atualizações</div>
                 <div class="update">
+				    <p style="text-align: left; font-size: 13px;"><strong>versão: 1.12</strong> (14052026.1243)</p>
+                    <ul style="margin-top: 8px; padding-left: 20px; font-size: 10px; text-align: left;">
+                        <li>Corrigido a funcionalidade que gera imagem. Agora não <br>corta mais as letras 
+						com descendente (g, y, ç, j, p, q, ...) <br>cortadas na imagem. </li>
+                    </ul>
                     <p style="text-align: left; font-size: 13px;"><strong>versão: 1.11</strong> (070526.0719)</p>
                     <ul style="margin-top: 8px; padding-left: 20px; font-size: 10px; text-align: left;">
                         <li>Corrigido a funcionalidade que gera imagem. Em telas <br>pequenas, a ficha encolhia e a
@@ -2434,76 +2439,93 @@
             return `${digitos.slice(0, 2)}.${digitos.slice(2, 5)}-${digitos.slice(5)}`;
         }
         /**********************************************/
-        document.getElementById('btn-copiar-imagem').addEventListener('click', function () {
-            const fichaOriginal = document.querySelector('.ficha');
-            if (!fichaOriginal) {
-                mostrarNotificacao('Ficha não encontrada.');
-                return;
-            }
+		document.getElementById('btn-copiar-imagem').addEventListener('click', function () {
+			const fichaOriginal = document.querySelector('.ficha');
+			if (!fichaOriginal) {
+				mostrarNotificacao('Ficha não encontrada.');
+				return;
+			}
 
-            mostrarNotificacao('Gerando imagem...');
+			mostrarNotificacao('Gerando imagem...');
 
-            // Clona a ficha inteira
-            const clone = fichaOriginal.cloneNode(true);
+			// Clona a ficha
+			const clone = fichaOriginal.cloneNode(true);
 
-            // Remove o cabeçalho ("GERÊNCIA DE CADASTRO FUNCIONAL")
-            const header = clone.querySelector('.header-ficha');
-            if (header) header.remove();
+			// Remove elementos indesejados (cabeçalho, avisos, etc.)
+			const header = clone.querySelector('.header-ficha');
+			if (header) header.remove();
+			const aviso = clone.querySelector('#estado-civil-msg');
+			if (aviso) aviso.remove();
+			const readaptadoDiv = clone.querySelector('div[style*="visibility: hidden"]');
+			if (readaptadoDiv) readaptadoDiv.remove();
 
-            // Remove possíveis mensagens de aviso
-            const aviso = clone.querySelector('#estado-civil-msg');
-            if (aviso) aviso.remove();
+			// Configura o clone para posicionamento off-screen e largura fixa
+			clone.style.position = 'absolute';
+			clone.style.top = '-9999px';
+			clone.style.left = '-9999px';
+			clone.style.width = '970px';
+			clone.style.backgroundColor = 'white';
+			clone.style.padding = '1mm 1mm';
+			clone.style.margin = '0';
+			clone.style.boxSizing = 'border-box';
+			clone.style.transform = 'none';
 
-            // Remove o div oculto do readaptado (que tem visibility: hidden)
-            const readaptadoDiv = clone.querySelector('div[style*="visibility: hidden"]');
-            if (readaptadoDiv) readaptadoDiv.remove();
+			// TESTE CORREÇÃO: adiciona estilos que evitam o corte sem alterar o visual
+			const estiloCorrecao = document.createElement('style');
+			estiloCorrecao.textContent = `
+				.ficha .val, .ficha .lbl, .lotacao-item {
+					line-height: 1.2 !important;        /* mantém a altura original */
+					padding-bottom: 2px !important;     /* folga mínima para o "rabo" do g, y, ç */
+					overflow: visible !important;       /* permite que o texto vaze sem cortes */
+					text-overflow: clip !important;     /* remove as reticências */
+					white-space: normal !important;     /* evita corte horizontal */
+				}
+				.ficha .celula {
+					overflow: visible !important;
+					min-height: auto !important;
+				}
+				.ficha .val {
+					word-break: break-word;             /* quebra palavras longas se necessário */
+				}
+			`;
+			clone.appendChild(estiloCorrecao);
 
-            // Força largura fixa e remove transformações
-            clone.style.position = 'absolute';
-            clone.style.top = '-9999px';
-            clone.style.left = '-9999px';
-            clone.style.width = '970px';
-            clone.style.backgroundColor = 'white';
-            clone.style.padding = '1mm 1mm';  // remove o espaço interno
-            clone.style.margin = '0';
-            clone.style.boxSizing = 'border-box';
-            clone.style.transform = 'none';
+			// Remove transform de todos os filhos (evita distorção)
+			clone.querySelectorAll('*').forEach(el => {
+				el.style.transform = 'none';
+			});
 
-            // Remove transform de todos os filhos (importante para evitar distorções)
-            clone.querySelectorAll('*').forEach(el => {
-                el.style.transform = 'none';
-            });
+			document.body.appendChild(clone);
 
-            document.body.appendChild(clone);
-
-            // Aguarda a renderização
-            setTimeout(() => {
-                html2canvas(clone, {
-                    scale: 1.2,
-                    backgroundColor: '#ffffff',
-                    logging: false,
-                    useCORS: false,
-                    letterRendering: true
-                }).then(canvas => {
-                    document.body.removeChild(clone);
-                    canvas.toBlob(blob => {
-                        try {
-                            navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
-                            mostrarNotificacao('Imagem copiada!');
-                        } catch (err) {
-                            mostrarNotificacao('Clique com botão direito na imagem para salvar.');
-                            const win = window.open();
-                            win.document.write('<img src="' + canvas.toDataURL() + '" style="max-width:100%;">');
-                            win.document.title = 'Ficha Cadastral';
-                        }
-                    }, 'image/png');
-                }).catch(error => {
-                    console.error(error);
-                    if (clone.parentNode) document.body.removeChild(clone);
-                    mostrarNotificacao('Erro ao gerar imagem.');
-                });
-            }, 100);
-        });
+			setTimeout(() => {
+				html2canvas(clone, {
+					scale: 1.2,                         //escala
+					backgroundColor: '#ffffff',
+					logging: false,
+					useCORS: false,
+					letterRendering: true,
+					windowWidth: clone.scrollWidth,
+					windowHeight: clone.scrollHeight
+				}).then(canvas => {
+					document.body.removeChild(clone);
+					canvas.toBlob(blob => {
+						try {
+							navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
+							mostrarNotificacao('Imagem copiada!');
+						} catch (err) {
+							mostrarNotificacao('Clique com botão direito na imagem para salvar.');
+							const win = window.open();
+							win.document.write('<img src="' + canvas.toDataURL() + '" style="max-width:100%;">');
+							win.document.title = 'Ficha Cadastral';
+						}
+					}, 'image/png');
+				}).catch(error => {
+					console.error(error);
+					if (clone.parentNode) document.body.removeChild(clone);
+					mostrarNotificacao('Erro ao gerar imagem.');
+				});
+			}, 100);
+		});
         /**********************************************/
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
